@@ -7,6 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C840DDF1E1E5A23004C3570 /* UnityEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C840DDE1E1E5A23004C3570 /* UnityEnvironment.swift */; };
+		1C840DE11E1E5FF5004C3570 /* AssetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C840DE01E1E5FF5004C3570 /* AssetBundle.swift */; };
+		1C840DE31E1E6739004C3570 /* Asset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C840DE21E1E6739004C3570 /* Asset.swift */; };
+		1C840DE51E1E6DD8004C3570 /* BinaryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C840DE41E1E6DD8004C3570 /* BinaryReader.swift */; };
+		1C840DE71E1E7863004C3570 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C840DE61E1E7863004C3570 /* Enums.swift */; };
+		1C840DF11E1E99CF004C3570 /* lz4.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C840DEB1E1E99CF004C3570 /* lz4.c */; };
+		1C840DF21E1E99CF004C3570 /* lz4.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C840DEC1E1E99CF004C3570 /* lz4.h */; };
+		1C840DF31E1E99CF004C3570 /* lz4hc.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C840DED1E1E99CF004C3570 /* lz4hc.c */; };
+		1C840DF41E1E99CF004C3570 /* lz4hc.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C840DEE1E1E99CF004C3570 /* lz4hc.h */; };
+		1C840DF51E1E99CF004C3570 /* NSData+LZ4.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C840DEF1E1E99CF004C3570 /* NSData+LZ4.h */; };
+		1C840DF61E1E99CF004C3570 /* NSData+LZ4.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C840DF01E1E99CF004C3570 /* NSData+LZ4.m */; };
+		1C840DFC1E22317A004C3570 /* LzmaSDKObjCBufferProcessor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C840DFB1E22317A004C3570 /* LzmaSDKObjCBufferProcessor.h */; };
+		1C840DFE1E2231BD004C3570 /* LzmaSDKObjCBufferProcessor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C840DFD1E2231BD004C3570 /* LzmaSDKObjCBufferProcessor.mm */; };
+		1C840E0B1E22321D004C3570 /* Lzma2Dec.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C840E071E22321D004C3570 /* Lzma2Dec.c */; };
+		1C840E0C1E22321D004C3570 /* Lzma2Dec.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C840E081E22321D004C3570 /* Lzma2Dec.h */; };
+		1C840E101E2233AD004C3570 /* Precomp.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C840E0F1E2233AD004C3570 /* Precomp.h */; };
+		1C840E121E2233BD004C3570 /* Compiler.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C840E111E2233BD004C3570 /* Compiler.h */; };
+		1C840E171E2233E6004C3570 /* LzmaDec.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C840E131E2233E6004C3570 /* LzmaDec.c */; };
+		1C840E181E2233E6004C3570 /* LzmaDec.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C840E141E2233E6004C3570 /* LzmaDec.h */; };
+		1C840E1C1E223452004C3570 /* LzmaSDKObjCTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C840E1B1E223452004C3570 /* LzmaSDKObjCTypes.h */; };
+		1C840E1E1E2234DA004C3570 /* 7zTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C840E1D1E2234DA004C3570 /* 7zTypes.h */; };
+		1C840E201E2234F8004C3570 /* LzmaAppleCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C840E1F1E2234F8004C3570 /* LzmaAppleCommon.h */; };
+		1C840E221E22358B004C3570 /* NSData+LZMA.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C840E211E22358B004C3570 /* NSData+LZMA.m */; };
 		4323C6071E1C445E00C97896 /* UnityPack-Swift.h in Headers */ = {isa = PBXBuildFile; fileRef = 4323C6051E1C445E00C97896 /* UnityPack-Swift.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4323C60F1E1C452D00C97896 /* UnityPack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4323C60E1E1C452D00C97896 /* UnityPack.swift */; };
 		4323C6181E1C45C500C97896 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4323C6171E1C45C500C97896 /* AppDelegate.swift */; };
@@ -25,6 +48,31 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1C840DDE1E1E5A23004C3570 /* UnityEnvironment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnityEnvironment.swift; sourceTree = "<group>"; };
+		1C840DE01E1E5FF5004C3570 /* AssetBundle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetBundle.swift; sourceTree = "<group>"; };
+		1C840DE21E1E6739004C3570 /* Asset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Asset.swift; sourceTree = "<group>"; };
+		1C840DE41E1E6DD8004C3570 /* BinaryReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BinaryReader.swift; sourceTree = "<group>"; };
+		1C840DE61E1E7863004C3570 /* Enums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
+		1C840DEB1E1E99CF004C3570 /* lz4.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lz4.c; sourceTree = "<group>"; };
+		1C840DEC1E1E99CF004C3570 /* lz4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lz4.h; sourceTree = "<group>"; };
+		1C840DED1E1E99CF004C3570 /* lz4hc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lz4hc.c; sourceTree = "<group>"; };
+		1C840DEE1E1E99CF004C3570 /* lz4hc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lz4hc.h; sourceTree = "<group>"; };
+		1C840DEF1E1E99CF004C3570 /* NSData+LZ4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+LZ4.h"; sourceTree = "<group>"; };
+		1C840DF01E1E99CF004C3570 /* NSData+LZ4.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+LZ4.m"; sourceTree = "<group>"; };
+		1C840DF71E1E9BAC004C3570 /* UnityPack-Swift-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UnityPack-Swift-Bridging-Header.h"; sourceTree = "<group>"; };
+		1C840DFB1E22317A004C3570 /* LzmaSDKObjCBufferProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LzmaSDKObjCBufferProcessor.h; sourceTree = "<group>"; };
+		1C840DFD1E2231BD004C3570 /* LzmaSDKObjCBufferProcessor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LzmaSDKObjCBufferProcessor.mm; sourceTree = "<group>"; };
+		1C840E071E22321D004C3570 /* Lzma2Dec.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Lzma2Dec.c; sourceTree = "<group>"; };
+		1C840E081E22321D004C3570 /* Lzma2Dec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Lzma2Dec.h; sourceTree = "<group>"; };
+		1C840E0F1E2233AD004C3570 /* Precomp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Precomp.h; sourceTree = "<group>"; };
+		1C840E111E2233BD004C3570 /* Compiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Compiler.h; sourceTree = "<group>"; };
+		1C840E131E2233E6004C3570 /* LzmaDec.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = LzmaDec.c; sourceTree = "<group>"; };
+		1C840E141E2233E6004C3570 /* LzmaDec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LzmaDec.h; sourceTree = "<group>"; };
+		1C840E1B1E223452004C3570 /* LzmaSDKObjCTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LzmaSDKObjCTypes.h; sourceTree = "<group>"; };
+		1C840E1D1E2234DA004C3570 /* 7zTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = 7zTypes.h; sourceTree = "<group>"; };
+		1C840E1F1E2234F8004C3570 /* LzmaAppleCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LzmaAppleCommon.h; sourceTree = "<group>"; };
+		1C840E211E22358B004C3570 /* NSData+LZMA.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+LZMA.m"; sourceTree = "<group>"; };
+		1C840E231E2235A7004C3570 /* NSData+LZMA.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSData+LZMA.h"; sourceTree = "<group>"; };
 		4323C6021E1C445E00C97896 /* UnityPack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = UnityPack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4323C6051E1C445E00C97896 /* UnityPack-Swift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UnityPack-Swift.h"; sourceTree = "<group>"; };
 		4323C6061E1C445E00C97896 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -54,9 +102,45 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1C840DEA1E1E99BB004C3570 /* LZ4 */ = {
+			isa = PBXGroup;
+			children = (
+				1C840DEB1E1E99CF004C3570 /* lz4.c */,
+				1C840DEC1E1E99CF004C3570 /* lz4.h */,
+				1C840DED1E1E99CF004C3570 /* lz4hc.c */,
+				1C840DEE1E1E99CF004C3570 /* lz4hc.h */,
+				1C840DEF1E1E99CF004C3570 /* NSData+LZ4.h */,
+				1C840DF01E1E99CF004C3570 /* NSData+LZ4.m */,
+			);
+			path = LZ4;
+			sourceTree = "<group>";
+		};
+		1C840DF81E2230FF004C3570 /* LZMA */ = {
+			isa = PBXGroup;
+			children = (
+				1C840E1F1E2234F8004C3570 /* LzmaAppleCommon.h */,
+				1C840E1D1E2234DA004C3570 /* 7zTypes.h */,
+				1C840E1B1E223452004C3570 /* LzmaSDKObjCTypes.h */,
+				1C840E131E2233E6004C3570 /* LzmaDec.c */,
+				1C840E141E2233E6004C3570 /* LzmaDec.h */,
+				1C840E111E2233BD004C3570 /* Compiler.h */,
+				1C840E0F1E2233AD004C3570 /* Precomp.h */,
+				1C840E071E22321D004C3570 /* Lzma2Dec.c */,
+				1C840E081E22321D004C3570 /* Lzma2Dec.h */,
+				1C840DFD1E2231BD004C3570 /* LzmaSDKObjCBufferProcessor.mm */,
+				1C840DFB1E22317A004C3570 /* LzmaSDKObjCBufferProcessor.h */,
+				1C840E211E22358B004C3570 /* NSData+LZMA.m */,
+				1C840E231E2235A7004C3570 /* NSData+LZMA.h */,
+			);
+			path = LZMA;
+			sourceTree = "<group>";
+		};
 		4323C5F81E1C445E00C97896 = {
 			isa = PBXGroup;
 			children = (
+				1C840DEA1E1E99BB004C3570 /* LZ4 */,
+				1C840DF81E2230FF004C3570 /* LZMA */,
+				1C840DF71E1E9BAC004C3570 /* UnityPack-Swift-Bridging-Header.h */,
 				4323C60D1E1C449700C97896 /* Sources */,
 				4323C6041E1C445E00C97896 /* UnityPack-Swift */,
 				4323C6161E1C45C500C97896 /* UnityPackExample */,
@@ -86,6 +170,11 @@
 			isa = PBXGroup;
 			children = (
 				4323C60E1E1C452D00C97896 /* UnityPack.swift */,
+				1C840DDE1E1E5A23004C3570 /* UnityEnvironment.swift */,
+				1C840DE01E1E5FF5004C3570 /* AssetBundle.swift */,
+				1C840DE21E1E6739004C3570 /* Asset.swift */,
+				1C840DE41E1E6DD8004C3570 /* BinaryReader.swift */,
+				1C840DE61E1E7863004C3570 /* Enums.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -108,7 +197,18 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C840DF41E1E99CF004C3570 /* lz4hc.h in Headers */,
+				1C840DFC1E22317A004C3570 /* LzmaSDKObjCBufferProcessor.h in Headers */,
+				1C840E201E2234F8004C3570 /* LzmaAppleCommon.h in Headers */,
+				1C840E0C1E22321D004C3570 /* Lzma2Dec.h in Headers */,
+				1C840E121E2233BD004C3570 /* Compiler.h in Headers */,
+				1C840E181E2233E6004C3570 /* LzmaDec.h in Headers */,
 				4323C6071E1C445E00C97896 /* UnityPack-Swift.h in Headers */,
+				1C840E101E2233AD004C3570 /* Precomp.h in Headers */,
+				1C840E1C1E223452004C3570 /* LzmaSDKObjCTypes.h in Headers */,
+				1C840DF51E1E99CF004C3570 /* NSData+LZ4.h in Headers */,
+				1C840E1E1E2234DA004C3570 /* 7zTypes.h in Headers */,
+				1C840DF21E1E99CF004C3570 /* lz4.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -215,7 +315,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C840DF11E1E99CF004C3570 /* lz4.c in Sources */,
 				4323C60F1E1C452D00C97896 /* UnityPack.swift in Sources */,
+				1C840DE51E1E6DD8004C3570 /* BinaryReader.swift in Sources */,
+				1C840DF61E1E99CF004C3570 /* NSData+LZ4.m in Sources */,
+				1C840DDF1E1E5A23004C3570 /* UnityEnvironment.swift in Sources */,
+				1C840DFE1E2231BD004C3570 /* LzmaSDKObjCBufferProcessor.mm in Sources */,
+				1C840DE31E1E6739004C3570 /* Asset.swift in Sources */,
+				1C840DE71E1E7863004C3570 /* Enums.swift in Sources */,
+				1C840DF31E1E99CF004C3570 /* lz4hc.c in Sources */,
+				1C840E221E22358B004C3570 /* NSData+LZMA.m in Sources */,
+				1C840E171E2233E6004C3570 /* LzmaDec.c in Sources */,
+				1C840E0B1E22321D004C3570 /* Lzma2Dec.c in Sources */,
+				1C840DE11E1E5FF5004C3570 /* AssetBundle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -345,6 +457,7 @@
 		4323C60B1E1C445E00C97896 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -359,6 +472,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = be.michotte.UnityPack;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "UnityPack-Swift-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
@@ -367,6 +481,7 @@
 		4323C60C1E1C445E00C97896 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -381,6 +496,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = be.michotte.UnityPack;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "UnityPack-Swift-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
@@ -433,6 +549,7 @@
 				4323C60C1E1C445E00C97896 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4323C61F1E1C45C500C97896 /* Build configuration list for PBXNativeTarget "UnityPackExample" */ = {
 			isa = XCConfigurationList;
@@ -441,6 +558,7 @@
 				4323C6211E1C45C500C97896 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

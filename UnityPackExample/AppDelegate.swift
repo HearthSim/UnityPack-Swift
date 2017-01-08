@@ -17,11 +17,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
 
-        let pathURL = URL(fileURLWithPath: "/Applications/Hearthstone/Data/OSX/cardtextures0.unity3d")
         do {
-            let data = try Data(contentsOf: pathURL)
-            let unityPack = UnityPack(data: data)
-            unityPack.load()
+            let bundle = try UnityPack.load(withFilePath: "/Applications/Hearthstone/Data/OSX/cardtextures0.unity3d");
+            
         } catch let error {
             print("\(error)")
         }

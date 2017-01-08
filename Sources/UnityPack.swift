@@ -7,10 +7,25 @@
 //
 
 import Foundation
-import Cocoa
-import Compression
+//import Cocoa
+//import Compression
 
-public typealias Byte = UInt8
+public class UnityPack {
+    
+    private static var env: UnityEnvironment?;
+    
+    public static func load(withFilePath filePath: String) throws -> AssetBundle? {
+        if let e = env {
+            return try e.load(filePath);
+        } else {
+            env = UnityEnvironment();
+            return try env?.load(filePath);
+        }
+    }
+}
+
+
+/*public typealias Byte = UInt8
 
 /** Available Compression Algorithms
  - Compression.lz4   : Fast compression
@@ -504,4 +519,4 @@ public class UnityPack {
     var isUnityfs: Bool {
         return signature == SIGNATURE_FS
     }
-}
+}*/
