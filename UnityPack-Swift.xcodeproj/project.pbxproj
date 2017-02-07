@@ -35,6 +35,7 @@
 		4323C6181E1C45C500C97896 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4323C6171E1C45C500C97896 /* AppDelegate.swift */; };
 		4323C61A1E1C45C500C97896 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4323C6191E1C45C500C97896 /* Assets.xcassets */; };
 		4323C61D1E1C45C500C97896 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4323C61B1E1C45C500C97896 /* MainMenu.xib */; };
+		BCF86DFE1E4A75E10046A63A /* Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCF86DFD1E4A75E10046A63A /* Object.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,6 +83,7 @@
 		4323C6191E1C45C500C97896 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4323C61C1E1C45C500C97896 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		4323C61E1E1C45C500C97896 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BCF86DFD1E4A75E10046A63A /* Object.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Object.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -175,6 +177,7 @@
 				1C840DE21E1E6739004C3570 /* Asset.swift */,
 				1C840DE41E1E6DD8004C3570 /* BinaryReader.swift */,
 				1C840DE61E1E7863004C3570 /* Enums.swift */,
+				BCF86DFD1E4A75E10046A63A /* Object.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -325,6 +328,7 @@
 				1C840DE71E1E7863004C3570 /* Enums.swift in Sources */,
 				1C840DF31E1E99CF004C3570 /* lz4hc.c in Sources */,
 				1C840E221E22358B004C3570 /* NSData+LZMA.m in Sources */,
+				BCF86DFE1E4A75E10046A63A /* Object.swift in Sources */,
 				1C840E171E2233E6004C3570 /* LzmaDec.c in Sources */,
 				1C840E0B1E22321D004C3570 /* Lzma2Dec.c in Sources */,
 				1C840DE11E1E5FF5004C3570 /* AssetBundle.swift in Sources */,

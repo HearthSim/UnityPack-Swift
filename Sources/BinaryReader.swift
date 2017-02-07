@@ -67,6 +67,7 @@ public enum ByteOrder {
 
 public class BinaryReader {
     var buffer: Readable
+    var endianness: ByteOrder = ByteOrder.bigEndian
     
     init(data: Readable) {
         self.buffer = data
@@ -82,30 +83,54 @@ public class BinaryReader {
         buffer.seek(count: Int(count), whence: 0)
     }
     
-    func readUInt8(byteOrder: ByteOrder = .bigEndian) -> UInt8 {
+    func align() {
+        let old = self.tell()
+        let new = (old + 3) & -4
+        if new > old {
+            self.seek(count: Int32(new))
+        }
+    }
+    
+    func readUInt8() -> UInt8 {
         var bytes = readBytes(count: 1)
         return bytes[0]
     }
     
-    func readInt(byteOrder: ByteOrder = .bigEndian) -> Int32 {
+    func readInt() -> Int32 {
+        return self.readInt(byteOrder: self.endianness)
+    }
+    
+    func readInt(byteOrder: ByteOrder) -> Int32 {
         let b = buffer.readBytes(count: 4)
         let int: Int32 = BinaryReader.fromByteArray(b, Int32.self, byteOrder: byteOrder)
         return int
     }
     
-    func readInt16(byteOrder: ByteOrder = .bigEndian) -> Int16 {
+    func readInt16() -> Int16 {
+        return self.readInt16(byteOrder: self.endianness)
+    }
+    
+    func readInt16(byteOrder: ByteOrder) -> Int16 {
         let b = buffer.readBytes(count: 2)
         let int: Int16 = BinaryReader.fromByteArray(b, Int16.self, byteOrder: byteOrder)
         return int
     }
     
-    func readInt64(byteOrder: ByteOrder = .bigEndian) -> Int64 {
+    func readInt64() -> Int64 {
+        return self.readInt64(byteOrder: self.endianness)
+    }
+    
+    func readInt64(byteOrder: ByteOrder) -> Int64 {
         let b = buffer.readBytes(count: 8)
         let int: Int64 = BinaryReader.fromByteArray(b, Int64.self, byteOrder: byteOrder)
         return int
     }
     
-    func readUInt(byteOrder: ByteOrder = .bigEndian) -> UInt32 {
+    func readUInt() -> UInt32 {
+        return self.readUInt(byteOrder: self.endianness)
+    }
+    
+    func readUInt(byteOrder: ByteOrder) -> UInt32 {
         let b = buffer.readBytes(count: 4)
         let int: UInt32 = BinaryReader.fromByteArray(b, UInt32.self, byteOrder: byteOrder)
         return int

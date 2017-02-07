@@ -20,16 +20,20 @@ public class Asset {
     var header_size: UInt32 = 0
     var base_path: String?
     
-    //public init() {
-        //self._buf_ofs = None
-        //self._objects = {}
+    var metadataSize: UInt32
+    var fileSize: UInt32
+    var format: UInt32
+    var dataOffset: UInt32
+    var endianness: UInt32
+    var longObjectIds: Bool
+    
+    let tree = TypeMetadata()
+    var assetRefs = [AssetRef]() // this should contain self as 0th element
+    var _objects = [ObjectInfo]()
+    
         //self.adds = []
-        //self.asset_refs = [self]
         //self.types = {}
         //self.typenames = {}
-        //self.bundle = None
-        //self.tree = TypeMetadata(self)
-    //}
     
     public init(fromBundle bundle: AssetBundle, buf: Readable) {
         
@@ -74,7 +78,7 @@ public class Asset {
         print("Error: Asset::fromFile is not yet implemented")
         self.name = (filePath as NSString).lastPathComponent
         self._buf_ofs = 0
-        // fileHandle bla bla
+        // TODO: fileHandle bla bla
         // ret._buf = BinaryReader(fileHandle)
         self.base_path = filePath //(full)
         if let path = self.base_path {
@@ -85,20 +89,187 @@ public class Asset {
     public func getAsset(path: String) -> Asset? {
         if let env = self.environment {
             if path.contains(":") {
-                env.getAsset(path: path)
+                return env.getAsset(path: path)
             }
-            env.getAsset(fileName: path)
+            return env.getAsset(fileName: path)
         }
         return nil
     }
     
-    //def get_asset(self, path):
-    //if ":" in path:
-    //return self.environment.get_asset(path)
-    //return self.environment.get_asset_by_filename(path)
+    public var description: String {
+        return "<\(String(describing: Asset.self)) \(self.name)>)"
+    }
+    
+    var objects: [ObjectInfo] {
+        if !self.loaded {
+            try self.load()
+        }
+        return self._objects
+    }
+    
+    var isResource: Bool {
+        return (self.name as NSString).lastPathComponent == ("resource")
+    }
     
     
+    private func load() throws {
+        if self.isResource {
+            self.loaded = true
+            return
+        }
+        
+        if let buf = self._buf {
+            
+            buf.seek(count: Int32(self._buf_ofs))
+            
+            self.metadataSize = buf.readUInt()
+            self.fileSize = buf.readUInt()
+            self.format = buf.readUInt()
+            self.dataOffset = buf.readUInt()
+            
+            if self.format >= 9 {
+                self.endianness = buf.readUInt()
+                if self.endianness == 0 {
+                    buf.endianness = .littleEndian;
+                }
+            }
+            
+            self.tree.load(buffer: buf)
+            
+            if ((self.format >= 7) && (self.format <= 13)) {
+                self.longObjectIds = buf.readUInt() != 0
+            }
+            
+            let num_objects = buf.readUInt();
+            
+            for i in 1...num_objects {
+                if self.format >= 14 {
+                    buf.align()
+                }
+                
+                let obj = ObjectInfo(asset: self)
+                obj.load(buf)
+                self.registerObject(obj: obj)
+            }
+            
+            if self.format >= 11 {
+                let numAdds = buf.readUInt()
+                for i in 1 ... numAdds {
+                    if self.format >= 14 {
+                        buf.align()
+                    }
+                    let id = self.readId(buffer: buf)
+                    self.adds.append(id, buf.readInt())
+                }
+            }
+            
+            if self.format >= 6 {
+                let numRefs = buf.readUInt()
+                for i in 1 ... numRefs {
+                    let ref = AssetRef(source: self)
+                    ref.load(buffer: buf)
+                    self.assetRefs.append(ref)
+                }
+            }
+            
+            let unkString = buf.readString()
+            if unkString != "" {
+                print("Error while loading Asset, ending string is \(unkString)")
+            }
+            self.loaded = true
+        }
+    }
+    
+    func readId(buffer: BinaryReader) -> Int64 {
+        if self.format >= 14 {
+            return buffer.readInt64()
+        }
+        return Int64(buffer.readInt())
+    }
+    
+    func registerObject(obj: ObjectInfo) {
+        // TODO: Asset::registerObject
+    }
+    
+    func pretty() {
+        // TODO: Asset::pretty
+    }
 }
+
+class AssetRef {
+    
+    let source: Asset
+    var assetPath: String = ""
+    var filePath: String = ""
+    var guid = UUID()
+    var type: Int32
+    var asset: Asset?
+    
+    public init(source: Asset) {
+        self.source = source
+    }
+    
+    public var description: String {
+        return "<\(String(describing: AssetRef.self)) asset_path=\(self.assetPath), guid=\(self.guid), type=\(self.type), file_path=\(self.filePath)>)"
+    }
+    
+    func load(buffer: BinaryReader) {
+        self.assetPath = buffer.readString()
+        let uuidBytes = buffer.readBytes(count: 16)
+        let uuidString = uuidBytes.reduce("") {$0 + String(format: "%X", $1)}
+        if let uuid = UUID(uuidString: uuidString) {
+            self.guid = uuid
+        } else {
+            print("Error creating UUID from \(uuidString)")
+        }
+        self.type = buffer.readInt()
+        self.filePath = buffer.readString()
+        self.asset = nil
+    }
+    
+    func resolve() -> Asset? {
+        return self.source.getAsset(path: self.filePath)
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
