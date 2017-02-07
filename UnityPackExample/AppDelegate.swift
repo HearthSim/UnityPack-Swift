@@ -24,7 +24,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             print("\(error)")
         }
 
-
+        NSApplication.shared().terminate(self)
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {

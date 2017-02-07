@@ -85,18 +85,18 @@ public class AssetBundle {
         let blk = BinaryReader(data: UPData(withData: data))
         let guid = blk.readBytes(count: 16)
         let num_blocks = blk.readInt()
-        
+
+        // read Archive block infos
         var blocks = [ArchiveBlockInfo]()
-        
         for _ in 1 ... num_blocks {
             let busize = blk.readInt()
             let bcsize = blk.readInt()
             let bflags = blk.readInt16()
-            blocks.append(ArchiveBlockInfo(uSize: busize, cSize: bcsize, flags: bflags))
+            blocks.append(ArchiveBlockInfo(uncompressedSize: busize, compressedSize: bcsize, flags: bflags))
         }
-        
+
+        // Read Asset data infos
         let num_nodes = blk.readInt()
-        
         struct AssetDataInfo {
             var ofs: Int
             var size: Int
@@ -111,7 +111,6 @@ public class AssetBundle {
         }
         
         var nodes = [AssetDataInfo]()
-        
         for _ in 1 ... num_nodes {
             let ofs = blk.readInt64()
             let size = blk.readInt64()
@@ -119,36 +118,37 @@ public class AssetBundle {
             let name = blk.readString()
             nodes.append(AssetDataInfo(ofs:Int(ofs), size:Int(size), status:status, name:name))
         }
-        
+
+        // read block storage
         let storage = ArchiveBlockStorage(blocks: blocks, stream: buf)
         for info in nodes {
             storage.seek(count: info.ofs)
-            var asset = Asset(from_bundle: self, buf: storage)
+            let asset = Asset(from_bundle: self, buf: storage)
             asset.name = info.name
+            print("Found asset: \(asset.name)")
             self.assets.append(asset)
         }
         
         // Hacky
-        self.name = self.assets[0].name
+        if self.assets.count > 0 {
+            self.name = self.assets[0].name
+        }
     }
     
     private func loadRaw(buf: BinaryReader) {
         // TODO: loading raw data
+        print("Error: reading raw data is not yet implemented!")
     }
     
     private func readCompressedData(buf: BinaryReader, compression: CompressionType, blockSize: UInt32) throws -> Data? {
-        let nsdata = NSData(data: Data(bytes: BinaryReader.toByteArray(blockSize) + buf.readBytes(count: Int(ciblockSize) )))
-        
-        //let array = [UInt8](dt)
-        //print("compressed data: \(array)");
-        //print("compressed data: \(array.map { String($0, radix: 16, uppercase: false) })");
+        let rawData = NSData(data: Data(bytes: BinaryReader.toByteArray(blockSize) + buf.readBytes(count: Int(ciblockSize) )))
         
         if compression == .none {
-            return Data(referencing: nsdata)
+            return Data(referencing: rawData)
         }
         
         if compression == .LZ4 || compression == .LZ4HC {
-            return nsdata.decompressLZ4();
+            return rawData.decompressLZ4();
         }
         
         return nil
@@ -161,9 +161,9 @@ class ArchiveBlockInfo {
     let compressed_size: Int32
     let flags: Int16
     
-    init(uSize: Int32, cSize: Int32, flags: Int16) {
-        self.uncompressed_size = uSize
-        self.compressed_size = cSize
+    init(uncompressedSize: Int32, compressedSize: Int32, flags: Int16) {
+        self.uncompressed_size = uncompressedSize
+        self.compressed_size = compressedSize
         self.flags = flags
     }
     
@@ -181,11 +181,11 @@ class ArchiveBlockInfo {
     
     func decompress(buf: [UInt8]) -> Data {
         if !self.compressed {
-            return Data(buf)
+            return Data(bytes: buf)
         }
         
-        let ty = self.compression_type
-        if ty == CompressionType.LZMA {
+        let cType = self.compression_type
+        if cType == CompressionType.LZMA {
             // TODO: LZMA decompression
             /*props, dict_size = struct.unpack("<BI", buf.read(5))
              lc = props % 9
@@ -202,27 +202,27 @@ class ArchiveBlockInfo {
              res = dec.decompress(buf.read())
              return BytesIO(res)
              */
-            print ("LZMA compressed blockinfo is currently unimplemented")
+            print ("Error: LZMA compressed blockinfo is currently unimplemented")
             return Data(buf)
         }
         
-        if ty == .LZ4 || ty == .LZ4HC {
-            let nsdata = NSData(data: Data(bytes: BinaryReader.toByteArray(self.uncompressed_size) + buf[0..<Int(self.compressed_size)] ))
+        if cType == .LZ4 || cType == .LZ4HC {
+            let rawData = NSData(data: Data(bytes: BinaryReader.toByteArray(self.uncompressed_size) + buf[0..<Int(self.compressed_size)] ))
             
-            if let decdata = nsdata.decompressLZ4() {
-                return decdata
+            if let ucData = rawData.decompressLZ4() {
+                return ucData
             }
         }
         
-        print("Unimplemented compression method: ")
-        return Data(buf)
+        print("Error: Unimplemented compression method: \(cType)")
+        return Data()
     }
 }
 
 public class ArchiveBlockStorage : Readable {
     
     let stream: BinaryReader
-    let blocks: [ArchiveBlockInfo]
+    let blocks: [ArchiveBlockInfo] // info about blocks
     var cursor: Int = 0
     let basepos: Int
     let maxpos: Int
@@ -236,6 +236,7 @@ public class ArchiveBlockStorage : Readable {
         self.stream = stream
         
         self.basepos = stream.tell()
+        // sum up all block uncompressed sizes
         self.maxpos = blocks.reduce(0) { $0 + Int($1.uncompressed_size) }
         
         self.sought = false
@@ -297,6 +298,7 @@ public class ArchiveBlockStorage : Readable {
         self.stream.seek(count: self.basepos + baseofs)
         if let cb = self.current_block {
             let buf = self.stream.readBytes(count: Int(cb.compressed_size))
+            
             self.current_stream = BinaryReader(data: UPData(withData:cb.decompress(buf: buf)))
         }
     }

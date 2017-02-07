@@ -57,6 +57,14 @@ class UPData : Readable {
     }
 }
 
+public enum ByteOrder {
+    case bigEndian
+    case littleEndian
+    
+    /// Machine specific byte order
+    static let nativeByteOrder: ByteOrder = (Int(CFByteOrderGetCurrent()) == Int(CFByteOrderLittleEndian.rawValue)) ? .littleEndian : .bigEndian
+}
+
 public class BinaryReader {
     var buffer: Readable
     
@@ -74,32 +82,32 @@ public class BinaryReader {
         buffer.seek(count: Int(count), whence: 0)
     }
     
-    func readUInt8() -> UInt8 {
+    func readUInt8(byteOrder: ByteOrder = .bigEndian) -> UInt8 {
         var bytes = readBytes(count: 1)
         return bytes[0]
     }
     
-    func readInt() -> Int32 {
+    func readInt(byteOrder: ByteOrder = .bigEndian) -> Int32 {
         let b = buffer.readBytes(count: 4)
-        let int: Int32 = BinaryReader.fromByteArray(b, Int32.self)
+        let int: Int32 = BinaryReader.fromByteArray(b, Int32.self, byteOrder: byteOrder)
         return int
     }
     
-    func readInt16() -> Int16 {
+    func readInt16(byteOrder: ByteOrder = .bigEndian) -> Int16 {
         let b = buffer.readBytes(count: 2)
-        let int: Int16 = BinaryReader.fromByteArray(b, Int16.self)
+        let int: Int16 = BinaryReader.fromByteArray(b, Int16.self, byteOrder: byteOrder)
         return int
     }
     
-    func readInt64() -> Int64 {
+    func readInt64(byteOrder: ByteOrder = .bigEndian) -> Int64 {
         let b = buffer.readBytes(count: 8)
-        let int: Int64 = BinaryReader.fromByteArray(b, Int64.self)
+        let int: Int64 = BinaryReader.fromByteArray(b, Int64.self, byteOrder: byteOrder)
         return int
     }
     
-    func readUInt() -> UInt32 {
+    func readUInt(byteOrder: ByteOrder = .bigEndian) -> UInt32 {
         let b = buffer.readBytes(count: 4)
-        let int: UInt32 = BinaryReader.fromByteArray(b, UInt32.self)
+        let int: UInt32 = BinaryReader.fromByteArray(b, UInt32.self, byteOrder: byteOrder)
         return int
     }
     
@@ -133,9 +141,13 @@ public class BinaryReader {
         return withUnsafeBytes(of: &value) { Array($0) }
     }
     
-    static func fromByteArray<T>(_ value: [UInt8], _: T.Type) -> T {
-        return value.withUnsafeBytes {
-            $0.baseAddress!.load(as: T.self)
+    static func fromByteArray<T>(_ value: [UInt8], _: T.Type, byteOrder: ByteOrder = ByteOrder.nativeByteOrder) -> T {
+        let bytes: [UInt8] = (byteOrder == .littleEndian) ? value : value.reversed()
+        return bytes.withUnsafeBufferPointer {
+            return $0.baseAddress!.withMemoryRebound(to: T.self, capacity: 1) {
+                $0.pointee
+            }
         }
+
     }
 }

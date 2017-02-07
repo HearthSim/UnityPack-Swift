@@ -708,7 +708,6 @@ int LZ4_uncompress(const char* source,
     const BYTE* ref;
     
     const uint8_t* pp = source;
-    printf("%d\n",*(pp));
 
     BYTE* op = (BYTE*) dest;
     BYTE* const oend = op + osize;

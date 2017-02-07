@@ -34,7 +34,7 @@ public class Asset {
         
         self.bundle = bundle
         self.environment = bundle.environment
-        let offset = buf.tell
+        let offset: Int = buf.tell
         self._buf = BinaryReader(data: buf)
         
         if bundle.isUnityFS {
@@ -51,21 +51,21 @@ public class Asset {
             header_size = bundle.asset_header_size
         }
         
-        // FIXME: this offset needs to be explored more
-        let ofs = buf.tell
+        // FIXME: this offset needs to be explored more (not implemented yet)
+        /*let ofs = buf.tell
         if bundle.compressed {
             let d = Data(bytes: buf.readAll)
-            /*dec = lzma.LZMADecompressor()
+            dec = lzma.LZMADecompressor()
             data = dec.decompress(buf.read())
             self._buf = BinaryReader(BytesIO(data[header_size:]), endian=">")
             self._buf_ofs = 0
-            buf.seek(ofs) */
+            buf.seek(ofs)
         } else {
-            /*self._buf_ofs = offset + header_size - 4
+            self._buf_ofs = offset + Int(header_size) - 4
             if self.is_resource {
                 self._buf_ofs -= len(ret.name)
-            }*/
-        }
+            }
+        }*/
         
     }
 }
