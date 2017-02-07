@@ -123,7 +123,7 @@ public class AssetBundle {
         let storage = ArchiveBlockStorage(blocks: blocks, stream: buf)
         for info in nodes {
             storage.seek(count: info.ofs)
-            let asset = Asset(from_bundle: self, buf: storage)
+            let asset = Asset(fromBundle: self, buf: storage)
             asset.name = info.name
             print("Found asset: \(asset.name)")
             self.assets.append(asset)

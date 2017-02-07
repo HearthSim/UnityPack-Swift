@@ -12,12 +12,13 @@ public class Asset {
     var name: String = ""
     var loaded = false
     var long_object_ids = false
-    var bundle: AssetBundle
-    var environment: UnityEnvironment
+    var bundle: AssetBundle?
+    var environment: UnityEnvironment?
     
-    var _buf: BinaryReader
+    var _buf: BinaryReader?
     var _buf_ofs: Int = 0
     var header_size: UInt32 = 0
+    var base_path: String?
     
     //public init() {
         //self._buf_ofs = None
@@ -30,7 +31,7 @@ public class Asset {
         //self.tree = TypeMetadata(self)
     //}
     
-    public init(from_bundle bundle: AssetBundle, buf: Readable) {
+    public init(fromBundle bundle: AssetBundle, buf: Readable) {
         
         self.bundle = bundle
         self.environment = bundle.environment
@@ -68,4 +69,48 @@ public class Asset {
         }*/
         
     }
+    
+    public init?(fromFile filePath: String) {
+        print("Error: Asset::fromFile is not yet implemented")
+        self.name = (filePath as NSString).lastPathComponent
+        self._buf_ofs = 0
+        // fileHandle bla bla
+        // ret._buf = BinaryReader(fileHandle)
+        self.base_path = filePath //(full)
+        if let path = self.base_path {
+            self.environment = UnityEnvironment(base_path: path)
+        }
+    }
+    
+    public func getAsset(path: String) -> Asset? {
+        if let env = self.environment {
+            if path.contains(":") {
+                env.getAsset(path: path)
+            }
+            env.getAsset(fileName: path)
+        }
+        return nil
+    }
+    
+    //def get_asset(self, path):
+    //if ":" in path:
+    //return self.environment.get_asset(path)
+    //return self.environment.get_asset_by_filename(path)
+    
+    
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
