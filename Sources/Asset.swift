@@ -11,7 +11,7 @@ import Foundation
 public class Asset {
     var name: String = ""
     var loaded = false
-    var long_object_ids = false
+    var longObjectIds = false
     var bundle: AssetBundle?
     var environment: UnityEnvironment?
     
@@ -25,15 +25,15 @@ public class Asset {
     var format: UInt32
     var dataOffset: UInt32
     var endianness: UInt32
-    var longObjectIds: Bool
     
-    let tree = TypeMetadata()
+    let tree: TypeMetadata
     var assetRefs = [AssetRef]() // this should contain self as 0th element
     var _objects = [ObjectInfo]()
+    var typenames = [UInt32 : String]()
     
         //self.adds = []
         //self.types = {}
-        //self.typenames = {}
+        //
     
     public init(fromBundle bundle: AssetBundle, buf: Readable) {
         
@@ -41,6 +41,7 @@ public class Asset {
         self.environment = bundle.environment
         let offset: Int = buf.tell
         self._buf = BinaryReader(data: buf)
+        self.tree = TypeMetadata(asset: self)
         
         if bundle.isUnityFS {
             self._buf_ofs = buf.tell
@@ -102,7 +103,11 @@ public class Asset {
     
     var objects: [ObjectInfo] {
         if !self.loaded {
-            try self.load()
+            do {
+                try self.load()
+            } catch let error {
+                print("\(error)")
+            }
         }
         return self._objects
     }
@@ -148,7 +153,7 @@ public class Asset {
                 }
                 
                 let obj = ObjectInfo(asset: self)
-                obj.load(buf)
+                obj.load(buffer: buf)
                 self.registerObject(obj: obj)
             }
             

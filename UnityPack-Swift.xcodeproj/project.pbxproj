@@ -30,6 +30,8 @@
 		1C840E1E1E2234DA004C3570 /* 7zTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C840E1D1E2234DA004C3570 /* 7zTypes.h */; };
 		1C840E201E2234F8004C3570 /* LzmaAppleCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C840E1F1E2234F8004C3570 /* LzmaAppleCommon.h */; };
 		1C840E221E22358B004C3570 /* NSData+LZMA.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C840E211E22358B004C3570 /* NSData+LZMA.m */; };
+		1CB7D18F1E4B60F80019D5D6 /* Resources.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB7D18E1E4B60F80019D5D6 /* Resources.swift */; };
+		1CB7D1911E4B63EA0019D5D6 /* Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB7D1901E4B63EA0019D5D6 /* Type.swift */; };
 		4323C6071E1C445E00C97896 /* UnityPack-Swift.h in Headers */ = {isa = PBXBuildFile; fileRef = 4323C6051E1C445E00C97896 /* UnityPack-Swift.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4323C60F1E1C452D00C97896 /* UnityPack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4323C60E1E1C452D00C97896 /* UnityPack.swift */; };
 		4323C6181E1C45C500C97896 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4323C6171E1C45C500C97896 /* AppDelegate.swift */; };
@@ -74,6 +76,8 @@
 		1C840E1F1E2234F8004C3570 /* LzmaAppleCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LzmaAppleCommon.h; sourceTree = "<group>"; };
 		1C840E211E22358B004C3570 /* NSData+LZMA.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+LZMA.m"; sourceTree = "<group>"; };
 		1C840E231E2235A7004C3570 /* NSData+LZMA.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSData+LZMA.h"; sourceTree = "<group>"; };
+		1CB7D18E1E4B60F80019D5D6 /* Resources.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Resources.swift; sourceTree = "<group>"; };
+		1CB7D1901E4B63EA0019D5D6 /* Type.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Type.swift; sourceTree = "<group>"; };
 		4323C6021E1C445E00C97896 /* UnityPack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = UnityPack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4323C6051E1C445E00C97896 /* UnityPack-Swift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UnityPack-Swift.h"; sourceTree = "<group>"; };
 		4323C6061E1C445E00C97896 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -178,6 +182,8 @@
 				1C840DE41E1E6DD8004C3570 /* BinaryReader.swift */,
 				1C840DE61E1E7863004C3570 /* Enums.swift */,
 				BCF86DFD1E4A75E10046A63A /* Object.swift */,
+				1CB7D18E1E4B60F80019D5D6 /* Resources.swift */,
+				1CB7D1901E4B63EA0019D5D6 /* Type.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -321,9 +327,11 @@
 				1C840DF11E1E99CF004C3570 /* lz4.c in Sources */,
 				4323C60F1E1C452D00C97896 /* UnityPack.swift in Sources */,
 				1C840DE51E1E6DD8004C3570 /* BinaryReader.swift in Sources */,
+				1CB7D18F1E4B60F80019D5D6 /* Resources.swift in Sources */,
 				1C840DF61E1E99CF004C3570 /* NSData+LZ4.m in Sources */,
 				1C840DDF1E1E5A23004C3570 /* UnityEnvironment.swift in Sources */,
 				1C840DFE1E2231BD004C3570 /* LzmaSDKObjCBufferProcessor.mm in Sources */,
+				1CB7D1911E4B63EA0019D5D6 /* Type.swift in Sources */,
 				1C840DE31E1E6739004C3570 /* Asset.swift in Sources */,
 				1C840DE71E1E7863004C3570 /* Enums.swift in Sources */,
 				1C840DF31E1E99CF004C3570 /* lz4hc.c in Sources */,

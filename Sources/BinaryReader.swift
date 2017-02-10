@@ -96,6 +96,11 @@ public class BinaryReader {
         return bytes[0]
     }
     
+    func readBool() -> Bool {
+        let byte = readBytes(count: 1)[0]
+        return byte != 0
+    }
+    
     func readInt() -> Int32 {
         return self.readInt(byteOrder: self.endianness)
     }
