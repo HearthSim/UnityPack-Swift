@@ -18,18 +18,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ aNotification: Notification) {
 
         do {
-            let files = ["cards0", "cardtextures0", "cardxml0"]
+            let files = ["cardtextures0", "cards0", "cardxml0"]
             //var cards = []
             //var textures = []
             
             for file in files {
-                if let bundle = try UnityPack.load(withFilePath: "/Applications/Hearthstone/Data/OSX/" + file + ".unity3d") {
+                let filePath = "/Applications/Hearthstone/Data/OSX/" + file + ".unity3d"
+                
+                if let bundle = try UnityPack.load(withFilePath: filePath) {
+                    
                     for asset in bundle.assets {
+                        print("Parsing \(asset.name)")
                         //handleAsset(asset, textures, cards, filter_ids)
                         
-                        //for obj in asset.objects.values() {
-                            
-                        //}
+                        for obj in asset.objects.values {
+                            print("object: \(obj)")
+                        }
                         
                     }
                 }

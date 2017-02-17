@@ -9,7 +9,7 @@
 import Foundation
 
 public class Asset {
-    var name: String = ""
+    public var name: String = ""
     var loaded = false
     var longObjectIds = false
     var bundle: AssetBundle?
@@ -20,20 +20,19 @@ public class Asset {
     var header_size: UInt32 = 0
     var base_path: String?
     
-    var metadataSize: UInt32
-    var fileSize: UInt32
-    var format: UInt32
-    var dataOffset: UInt32
-    var endianness: UInt32
+    var metadataSize: UInt32 = 0
+    var fileSize: UInt32 = 0
+    var format: UInt32 = 0
+    var dataOffset: UInt32 = 0
+    var endianness: UInt32 = 0
     
-    let tree: TypeMetadata
-    var assetRefs = [AssetRef]() // this should contain self as 0th element
-    var _objects = [ObjectInfo]()
+    var tree = TypeMetadata(asset: nil)
+    var assetRefs = [Any]() // first element is self (see init)
+    var _objects = [Int64: ObjectInfo]()
     var typenames = [UInt32 : String]()
+    var types = [Int: TypeTree]()
+    var adds = [(v1: Int64, v2: Int32)]()
     
-        //self.adds = []
-        //self.types = {}
-        //
     
     public init(fromBundle bundle: AssetBundle, buf: Readable) {
         
@@ -42,6 +41,7 @@ public class Asset {
         let offset: Int = buf.tell
         self._buf = BinaryReader(data: buf)
         self.tree = TypeMetadata(asset: self)
+        assetRefs.append(self)
         
         if bundle.isUnityFS {
             self._buf_ofs = buf.tell
@@ -79,6 +79,7 @@ public class Asset {
         print("Error: Asset::fromFile is not yet implemented")
         self.name = (filePath as NSString).lastPathComponent
         self._buf_ofs = 0
+        assetRefs.append(self)
         // TODO: fileHandle bla bla
         // ret._buf = BinaryReader(fileHandle)
         self.base_path = filePath //(full)
@@ -101,7 +102,7 @@ public class Asset {
         return "<\(String(describing: Asset.self)) \(self.name)>)"
     }
     
-    var objects: [ObjectInfo] {
+    public var objects: [Int64: ObjectInfo] {
         if !self.loaded {
             do {
                 try self.load()
@@ -147,7 +148,7 @@ public class Asset {
             
             let num_objects = buf.readUInt();
             
-            for i in 1...num_objects {
+            for _ in 1...num_objects {
                 if self.format >= 14 {
                     buf.align()
                 }
@@ -159,18 +160,18 @@ public class Asset {
             
             if self.format >= 11 {
                 let numAdds = buf.readUInt()
-                for i in 1 ... numAdds {
+                for _ in 0 ..< numAdds {
                     if self.format >= 14 {
                         buf.align()
                     }
                     let id = self.readId(buffer: buf)
-                    self.adds.append(id, buf.readInt())
+                    self.adds.append((id, buf.readInt()))
                 }
             }
             
             if self.format >= 6 {
                 let numRefs = buf.readUInt()
-                for i in 1 ... numRefs {
+                for _ in 0 ..< numRefs {
                     let ref = AssetRef(source: self)
                     ref.load(buffer: buf)
                     self.assetRefs.append(ref)
@@ -178,9 +179,8 @@ public class Asset {
             }
             
             let unkString = buf.readString()
-            if unkString != "" {
-                print("Error while loading Asset, ending string is \(unkString)")
-            }
+            precondition(unkString == "", "Error while loading Asset, ending string is \(unkString)")
+  
             self.loaded = true
         }
     }
@@ -193,11 +193,29 @@ public class Asset {
     }
     
     func registerObject(obj: ObjectInfo) {
-        // TODO: Asset::registerObject
+        
+        if let oType = self.tree.typeTrees[Int(obj.typeId)] {
+            self.types[Int(obj.typeId)] = oType
+        } else if !self.types.keys.contains(Int(obj.typeId)) {
+            let trees = TypeMetadata.defaultTypeWith(asset: self).typeTrees
+            if let oType = trees[Int(obj.classId)] {
+                self.types[Int(obj.typeId)] = oType
+            } else {
+                print("\(obj.classId) absent from structs.dat")
+                self.types[Int(obj.typeId)] = nil
+            }
+        }
+        
+        if self._objects.keys.contains(obj.pathId) {
+            print("Duplicate asset object: \(obj) (path_id=\(obj.pathId))")
+        }
+        
+        self._objects[obj.pathId] = obj
     }
     
     func pretty() {
         // TODO: Asset::pretty
+        fatalError("Asset::pretty is not yet implemented")
     }
 }
 
@@ -207,7 +225,7 @@ class AssetRef {
     var assetPath: String = ""
     var filePath: String = ""
     var guid = UUID()
-    var type: Int32
+    var type: Int32 = 0
     var asset: Asset?
     
     public init(source: Asset) {
@@ -236,57 +254,3 @@ class AssetRef {
         return self.source.getAsset(path: self.filePath)
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

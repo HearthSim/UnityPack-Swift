@@ -68,6 +68,7 @@ class TypeTree {
         parents.append(self)
         
         let buf = BinaryReader(data: UPData(withData: Data(bytes: nodeData)))
+        buf.endianness = ByteOrder.littleEndian
         
         for _ in 1...numNodes {
             let version = buf.readInt16()
@@ -108,8 +109,13 @@ class TypeTree {
             return "(null)"
         }
         let subarray = data[Int(off)..<data.count].split(separator: 0)[0]
-        // TODO: convert to string
-        return ""
+        if let string = String(bytes: subarray, encoding: .utf8) {
+            return string.characters.filter { $0 != "\0" }
+                .map { String($0) }
+                .joined()
+        }
+        
+        fatalError("Cannot convert data to string")
     }
 }
 
@@ -127,20 +133,22 @@ class TypeMetadata {
         return instance!
     }
     
-    let asset: Asset
-    var typeTrees = [Int32: TypeTree]()
-    var hashes = [Int32: [UInt8]]()
+    let asset: Asset?
+    var typeTrees = [Int: TypeTree]()
+    var hashes = [Int: [UInt8]]()
     var generatorVersion = ""
     var targetPlatform: RuntimePlatform = .OSXEditor
     
-    public init(asset: Asset) {
+    public init(asset: Asset?) {
         self.asset = asset
     }
     
     func load(buffer: BinaryReader, format: UInt32 = 0) {
         var format = format
         if format == 0 {
-            format = self.asset.format
+            if let asset = self.asset {
+                format = asset.format
+            }
         }
         
         self.generatorVersion = buffer.readString()
@@ -160,12 +168,12 @@ class TypeMetadata {
                     hash = buffer.readBytes(count: 0x10)
                 }
                 
-                self.hashes[classId] = hash
+                self.hashes[Int(classId)] = hash
                 
                 if hastTypeTrees {
                     let tree = TypeTree(format: format)
                     tree.load(buffer: buffer)
-                    self.typeTrees[classId] = tree
+                    self.typeTrees[Int(classId)] = tree
                 }
             }
 
@@ -175,7 +183,7 @@ class TypeMetadata {
                 let classId = buffer.readInt()
                 let tree = TypeTree(format: format)
                 tree.load(buffer: buffer)
-                self.typeTrees[classId] = tree
+                self.typeTrees[Int(classId)] = tree
             }
         }
     }

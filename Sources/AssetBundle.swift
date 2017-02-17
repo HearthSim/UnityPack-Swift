@@ -125,7 +125,6 @@ public class AssetBundle {
             storage.seek(count: info.ofs)
             let asset = Asset(fromBundle: self, buf: storage)
             asset.name = info.name
-            print("Found asset: \(asset.name)")
             self.assets.append(asset)
         }
         
@@ -137,7 +136,7 @@ public class AssetBundle {
     
     private func loadRaw(buf: BinaryReader) {
         // TODO: loading raw data
-        print("Error: reading raw data is not yet implemented!")
+        fatalError("Error: reading raw data is not yet implemented!")
     }
     
     private func readCompressedData(buf: BinaryReader, compression: CompressionType, blockSize: UInt32) throws -> Data? {
@@ -202,7 +201,7 @@ class ArchiveBlockInfo {
              res = dec.decompress(buf.read())
              return BytesIO(res)
              */
-            print ("Error: LZMA compressed blockinfo is currently unimplemented")
+            fatalError("Error: LZMA compressed blockinfo is currently unimplemented")
             return Data(buf)
         }
         
@@ -304,7 +303,22 @@ public class ArchiveBlockStorage : Readable {
     }
     
     public func readBytes(count: Int) -> [UInt8] {
-        return stream.readBytes(count: count)
+        var buf = [UInt8]()
+        var size = count
+        while size != 0 && self.cursor < self.maxpos {
+            if !self.in_current_block(pos: self.cursor) {
+                self.seek_to_block(pos: self.cursor)
+            }
+            let part = self.current_stream!.readBytes(count: size)
+            if size > 0 {
+                precondition(part.count != 0, "EOFERROR")
+                size -= part.count
+            }
+            self.cursor += part.count
+            buf.append(contentsOf: part)
+        }
+        return buf
+        //return stream.readBytes(count: count)
     }
     
 }

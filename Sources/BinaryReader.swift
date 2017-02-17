@@ -141,20 +141,32 @@ public class BinaryReader {
         return int
     }
     
-    func readString() -> String {
+    func readFloat() -> Float {
+        let bytes = buffer.readBytes(count: 4)
+        var f:Float = 0.0
+
+        memcpy(&f, bytes, 4)
+        return f
+    }
+    
+    func readString(size: UInt32 = 0) -> String {
         var bytes:[UInt8] = []
         
-        while true {
-            if let byte = readBytes(count: 1).first {
-                if UInt32(byte) == ("\0" as UnicodeScalar).value {
+        if size != 0 {
+            bytes = readBytes(count: Int(size))
+        } else {
+            while true {
+                if let byte = readBytes(count: 1).first {
+                    if UInt32(byte) == ("\0" as UnicodeScalar).value {
+                        break
+                    }
+                    bytes.append(byte)
+                } else {
                     break
                 }
-                bytes.append(byte)
-            } else {
-                break
             }
         }
-        
+ 
         //print("Bytes: \(bytes)")
         //print("\(MemoryLayout<String>.size)")
         //let bytes = readBytes(count: 8)

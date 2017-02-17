@@ -37,11 +37,32 @@ class Resources {
     private let structs: [UInt8]
     
     private init() {
-        // TODO: load strings.dat
-        strings = [UInt8]()
-        
-        // TODO: load structs.dat
-        structs = [UInt8]()
+        // load strings.dat
+        let bundle = Bundle(for: type(of: self))
+        if let stringsPath = bundle.path(forResource: "strings", ofType: "dat", inDirectory: "Resources") {
+            if let stringsData = NSData(contentsOfFile: stringsPath) {
+                var buffer = [UInt8](repeating: 0, count: stringsData.length)
+                stringsData.getBytes(&buffer, length: stringsData.length)
+                strings = buffer
+            } else {
+                fatalError("Cannot load strings.dat")
+            }
+        } else {
+            fatalError("Cannot load strings.dat")
+        }
+                
+        // load structs.dat
+        if let structsPath = bundle.path(forResource: "structs", ofType: "dat", inDirectory: "Resources") {
+            if let structsData = NSData(contentsOfFile: structsPath) {
+                var buffer = [UInt8](repeating: 0, count: structsData.length)
+                structsData.getBytes(&buffer, length: structsData.length)
+                structs = buffer
+            } else {
+                fatalError("Cannot load structs.dat")
+            }
+        } else {
+            fatalError("Cannot load structs.dat")
+        }
     }
     
     public static var stringsData: [UInt8] {
