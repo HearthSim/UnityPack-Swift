@@ -12,16 +12,33 @@ class UnityClass {
     
     static let instance = UnityClass()
     
-    private var UNITYCLASSES = [String : String]()
+    private var unityClasses: [String : String]
     
     private init() {
-        // TODO: load Unityclasses from JSON
-        // json load classes.json
+        // load Unityclasses from JSON
+        let bundle = Bundle(for: type(of: self))
+        if let classesPath = bundle.path(forResource: "classes", ofType: "json", inDirectory: "Resources") {
+            if let classesData = NSData(contentsOfFile: classesPath) {
+                do {
+                    if let dictionaryOK = try JSONSerialization.jsonObject(with: Data(referencing: classesData), options: []) as? [String: String] {
+                        unityClasses = dictionaryOK
+                        return
+                    }
+                } catch {
+                    fatalError("Cannot parse classes.json")
+                }
+            } else {
+                fatalError("Cannot load classes.json")
+            }
+        } else {
+            fatalError("Cannot load classes.json")
+        }
+        unityClasses = [String : String]()
     }
     
-    public static func getUnityClass(fromType: UInt32) -> String {
+    public static func getUnityClass(fromType: Int) -> String {
         let typeStr = String(fromType)
-        if let classname = instance.UNITYCLASSES[typeStr] {
+        if let classname = instance.unityClasses[typeStr] {
             return classname
         }
         return "<Unknown \(typeStr)>"

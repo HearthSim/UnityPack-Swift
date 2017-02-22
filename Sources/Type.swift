@@ -8,7 +8,7 @@
 
 import Foundation
 
-class TypeTree {
+class TypeTree: CustomStringConvertible {
     var children = [TypeTree]()
     var version: Int32 = 0
     var isArray = false

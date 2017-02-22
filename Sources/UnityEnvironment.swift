@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class UnityEnvironment {
+public class UnityEnvironment: CustomStringConvertible {
     
     private var base_path: String;
     
@@ -70,6 +70,7 @@ public class UnityEnvironment {
             if let bPath = bundle.path {
                 let dirname = (bPath as NSString).deletingLastPathComponent
                 // TODO: look for cab files and call load
+                fatalError("Environment::discover is not yet implemented")
             }
         }
     }

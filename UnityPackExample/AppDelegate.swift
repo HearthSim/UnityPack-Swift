@@ -18,7 +18,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ aNotification: Notification) {
 
         do {
-            let files = ["cardtextures0", "cards0", "cardxml0"]
+            let files = [/*"cardtextures0",*/ "cards0"/*, "cardxml0"*/]
             //var cards = []
             //var textures = []
             

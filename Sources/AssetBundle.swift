@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class AssetBundle {
+public class AssetBundle: CustomStringConvertible {
     public var path: String?
     let environment: UnityEnvironment
     
@@ -202,7 +202,7 @@ class ArchiveBlockInfo {
              return BytesIO(res)
              */
             fatalError("Error: LZMA compressed blockinfo is currently unimplemented")
-            return Data(buf)
+            //return Data(buf)
         }
         
         if cType == .LZ4 || cType == .LZ4HC {
@@ -318,7 +318,6 @@ public class ArchiveBlockStorage : Readable {
             buf.append(contentsOf: part)
         }
         return buf
-        //return stream.readBytes(count: count)
     }
     
 }

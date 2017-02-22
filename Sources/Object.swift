@@ -9,15 +9,16 @@
 import Foundation
 
 func loadObject(type: TypeTree, object: Any?) -> Any? {
-    //let clsname = type.type
+    let clsname = type.type
+    
     // if UnityEngine has this type -> load
-    return nil
+    return object
 }
 
-public class ObjectInfo {
+public class ObjectInfo: CustomStringConvertible {
     
     let asset: Asset
-    var typeId: UInt32 = 0
+    var typeId: Int = 0
     var pathId: Int64 = 0
     var dataOffset: UInt32 = 0
     var size: UInt32 = 0
@@ -38,11 +39,39 @@ public class ObjectInfo {
         if self.typeId > 0 {
             return UnityClass.getUnityClass(fromType: self.typeId)
         } else if !self.asset.typenames.keys.contains(self.typeId) {
-            let script = self.read()//["m_Script"]
-            fatalError("Object type not resolve not implementd yet")
-            // TODO: type resolve
-            // ..
-            // self.asset.typenames[self.typeId] = typename
+            let rawdata = self.read()
+            var typename = ""
+            if let dict = rawdata as? [String: Any] {
+                
+                if let script = dict["m_Script"] {
+                    if let pointer = script as? ObjectPointer {
+                        if let resolved = pointer.resolve() {
+                            if let ressdict = resolved as? [String: Any] {
+                                if let name = ressdict["m_ClassName"] {
+                                    typename = name as! String
+                                } else {
+                                    fatalError("Resolved object pointer has no name field")
+                                }
+                            } else {
+                                fatalError("Resolved object pointer is not a dictionary")
+                            }
+                        } else {
+                            // type not implemented, capture type name in PPtr<...>
+                            typename = pointer.type.type
+                            let startIndex =  typename.index(typename.startIndex, offsetBy: 5)
+                            let endIndex = typename.index(typename.startIndex, offsetBy: -1)
+                            typename = typename[startIndex ... endIndex]
+                        }
+                    } else {
+                        fatalError("Object type \(script) is not ObjectPointer")
+                    }
+                } else {
+                    fatalError("Object type \(dict) is not dictionary type")
+                }
+            } else {
+                typename = (self.asset.tree.typeTrees[-150]?.type)!
+            }
+            self.asset.typenames[self.typeId] = typename
         }
         return self.asset.typenames[self.typeId]!
     }
@@ -66,7 +95,7 @@ public class ObjectInfo {
         self.pathId = self.readId(buffer: buffer)
         self.dataOffset = buffer.readUInt() + self.asset.dataOffset
         self.size = buffer.readUInt()
-        self.typeId = buffer.readUInt()
+        self.typeId = Int(buffer.readInt())
         self.classId = buffer.readInt16()
         
         if self.asset.format <= 10 {
@@ -124,7 +153,7 @@ public class ObjectInfo {
             result =  buffer.readFloat()
         } else if t == "string" {
             let size = buffer.readUInt()
-            result = buffer.readString(size: size)
+            result = buffer.readString(size: Int(size))
             align = type.children[0].postAlign
         } else {
             if type.isArray {
@@ -145,7 +174,7 @@ public class ObjectInfo {
                     result = buffer.readBytes(count: Int(size))
                 } else {
                     var arr = [Any?]()
-                    for _ in 1...size {
+                    for _ in 0..<size {
                         arr.append(self.readValue(type: arrayType, buffer: buffer))
                     }
                     result = arr
@@ -185,7 +214,7 @@ public class ObjectInfo {
     }
 }
 
-class ObjectPointer {
+class ObjectPointer: CustomStringConvertible {
     
     let type: TypeTree
     let source_asset: Asset

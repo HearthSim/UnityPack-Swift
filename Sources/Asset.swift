@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class Asset {
+public class Asset: CustomStringConvertible {
     public var name: String = ""
     var loaded = false
     var longObjectIds = false
@@ -27,9 +27,14 @@ public class Asset {
     var endianness: UInt32 = 0
     
     var tree = TypeMetadata(asset: nil)
-    var assetRefs = [Any]() // first element is self (see init)
+    lazy var assetRefs: [Any] = {
+        var aRef = [Any]()
+        aRef.append(self)
+        return aRef;
+    }()
+    
     var _objects = [Int64: ObjectInfo]()
-    var typenames = [UInt32 : String]()
+    var typenames = [Int : String]()
     var types = [Int: TypeTree]()
     var adds = [(v1: Int64, v2: Int32)]()
     
@@ -41,7 +46,6 @@ public class Asset {
         let offset: Int = buf.tell
         self._buf = BinaryReader(data: buf)
         self.tree = TypeMetadata(asset: self)
-        assetRefs.append(self)
         
         if bundle.isUnityFS {
             self._buf_ofs = buf.tell
@@ -76,10 +80,10 @@ public class Asset {
     }
     
     public init?(fromFile filePath: String) {
-        print("Error: Asset::fromFile is not yet implemented")
+        fatalError("Error: Asset::fromFile is not yet implemented")
         self.name = (filePath as NSString).lastPathComponent
         self._buf_ofs = 0
-        assetRefs.append(self)
+        
         // TODO: fileHandle bla bla
         // ret._buf = BinaryReader(fileHandle)
         self.base_path = filePath //(full)
@@ -101,6 +105,7 @@ public class Asset {
     public var description: String {
         return "<\(String(describing: Asset.self)) \(self.name)>)"
     }
+    
     
     public var objects: [Int64: ObjectInfo] {
         if !self.loaded {
@@ -156,6 +161,8 @@ public class Asset {
                 let obj = ObjectInfo(asset: self)
                 obj.load(buffer: buf)
                 self.registerObject(obj: obj)
+                // accessing object's properties here is a bad idea as they will refer back to this (unloaded) asset
+                //print("Found object \(obj)")
             }
             
             if self.format >= 11 {
@@ -219,12 +226,12 @@ public class Asset {
     }
 }
 
-class AssetRef {
+class AssetRef: CustomStringConvertible {
     
     let source: Asset
     var assetPath: String = ""
     var filePath: String = ""
-    var guid = UUID()
+    var guid: NSUUID?
     var type: Int32 = 0
     var asset: Asset?
     
@@ -239,12 +246,9 @@ class AssetRef {
     func load(buffer: BinaryReader) {
         self.assetPath = buffer.readString()
         let uuidBytes = buffer.readBytes(count: 16)
-        let uuidString = uuidBytes.reduce("") {$0 + String(format: "%X", $1)}
-        if let uuid = UUID(uuidString: uuidString) {
-            self.guid = uuid
-        } else {
-            print("Error creating UUID from \(uuidString)")
-        }
+        
+        self.guid = NSUUID(uuidBytes: uuidBytes)
+        
         self.type = buffer.readInt()
         self.filePath = buffer.readString()
         self.asset = nil

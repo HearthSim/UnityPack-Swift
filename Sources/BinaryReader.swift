@@ -149,10 +149,10 @@ public class BinaryReader {
         return f
     }
     
-    func readString(size: UInt32 = 0) -> String {
+    func readString(size: Int = -1) -> String {
         var bytes:[UInt8] = []
         
-        if size != 0 {
+        if size >= 0 {
             bytes = readBytes(count: Int(size))
         } else {
             while true {

@@ -706,8 +706,6 @@ int LZ4_uncompress(const char* source,
     // Local Variables
     const BYTE* restrict ip = (const BYTE*) source;
     const BYTE* ref;
-    
-    const uint8_t* pp = source;
 
     BYTE* op = (BYTE*) dest;
     BYTE* const oend = op + osize;
