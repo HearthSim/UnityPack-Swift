@@ -8,11 +8,15 @@
 
 import Foundation
 
-func loadObject(type: TypeTree, object: Any?) -> Any? {
+func loadObject(type: TypeTree, dict: [String: Any]) -> Any? {
     let clsname = type.type
     
-    // if UnityEngine has this type -> load
-    return object
+    if let classType = NSClassFromString(clsname) as? EngineObject.Type {
+        let obj = classType.init(from: dict)
+        return obj
+    }
+    
+    return dict
 }
 
 public class ObjectInfo: CustomStringConvertible {
@@ -183,7 +187,7 @@ public class ObjectInfo: CustomStringConvertible {
                 assert(type.children.count == 2, "Type pair needs exactly 2 elements not \(type.children.count)")
                 let first = self.readValue(type: type.children[0], buffer: buffer)
                 let second = self.readValue(type: type.children[1], buffer: buffer)
-                result = [first, second]
+                result = (first: first, second: second)
             } else {
                 var map = [String:Any?]()
                 
@@ -191,7 +195,7 @@ public class ObjectInfo: CustomStringConvertible {
                     map[child.name] = self.readValue(type: child, buffer: buffer)
                 }
                 
-                result = loadObject(type: type, object: map)
+                result = loadObject(type: type, dict: map)
                 if t == "StreamedResource" {
                     if self.asset.bundle != nil {
                         //TODO: streamable
@@ -214,7 +218,7 @@ public class ObjectInfo: CustomStringConvertible {
     }
 }
 
-class ObjectPointer: CustomStringConvertible {
+public class ObjectPointer: CustomStringConvertible {
     
     let type: TypeTree
     let source_asset: Asset
