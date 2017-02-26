@@ -35,11 +35,11 @@
 		1CBCD5851E5703C3008DD5E4 /* Resources in Resources */ = {isa = PBXBuildFile; fileRef = 1CBCD5841E5703C3008DD5E4 /* Resources */; };
 		1CBCD5881E5F0328008DD5E4 /* EngineObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CBCD5871E5F0328008DD5E4 /* EngineObjects.swift */; };
 		1CBCD58A1E5F4DF5008DD5E4 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CBCD5891E5F4DF5008DD5E4 /* main.swift */; };
-		4323C6071E1C445E00C97896 /* UnityPack-Swift.h in Headers */ = {isa = PBXBuildFile; fileRef = 4323C6051E1C445E00C97896 /* UnityPack-Swift.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4323C60F1E1C452D00C97896 /* UnityPack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4323C60E1E1C452D00C97896 /* UnityPack.swift */; };
 		4323C6181E1C45C500C97896 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4323C6171E1C45C500C97896 /* AppDelegate.swift */; };
 		4323C61A1E1C45C500C97896 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4323C6191E1C45C500C97896 /* Assets.xcassets */; };
 		4323C61D1E1C45C500C97896 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4323C61B1E1C45C500C97896 /* MainMenu.xib */; };
+		BCDFEE901E6384D800445830 /* Texture.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCDFEE8F1E6384D800445830 /* Texture.swift */; };
 		BCF86DFE1E4A75E10046A63A /* Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCF86DFD1E4A75E10046A63A /* Object.swift */; };
 /* End PBXBuildFile section */
 
@@ -93,6 +93,7 @@
 		4323C6191E1C45C500C97896 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4323C61C1E1C45C500C97896 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		4323C61E1E1C45C500C97896 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BCDFEE8F1E6384D800445830 /* Texture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Texture.swift; path = Engine/Texture.swift; sourceTree = "<group>"; };
 		BCF86DFD1E4A75E10046A63A /* Object.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Object.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -151,6 +152,7 @@
 			isa = PBXGroup;
 			children = (
 				1CBCD5871E5F0328008DD5E4 /* EngineObjects.swift */,
+				BCDFEE8F1E6384D800445830 /* Texture.swift */,
 			);
 			name = Engine;
 			sourceTree = "<group>";
@@ -229,7 +231,6 @@
 				1C840E0C1E22321D004C3570 /* Lzma2Dec.h in Headers */,
 				1C840E121E2233BD004C3570 /* Compiler.h in Headers */,
 				1C840E181E2233E6004C3570 /* LzmaDec.h in Headers */,
-				4323C6071E1C445E00C97896 /* UnityPack-Swift.h in Headers */,
 				1C840E101E2233AD004C3570 /* Precomp.h in Headers */,
 				1C840E1C1E223452004C3570 /* LzmaSDKObjCTypes.h in Headers */,
 				1C840DF51E1E99CF004C3570 /* NSData+LZ4.h in Headers */,
@@ -349,6 +350,7 @@
 				1C840DF61E1E99CF004C3570 /* NSData+LZ4.m in Sources */,
 				1C840DDF1E1E5A23004C3570 /* UnityEnvironment.swift in Sources */,
 				1C840DFE1E2231BD004C3570 /* LzmaSDKObjCBufferProcessor.mm in Sources */,
+				BCDFEE901E6384D800445830 /* Texture.swift in Sources */,
 				1CB7D1911E4B63EA0019D5D6 /* Type.swift in Sources */,
 				1C840DE31E1E6739004C3570 /* Asset.swift in Sources */,
 				1C840DE71E1E7863004C3570 /* Enums.swift in Sources */,

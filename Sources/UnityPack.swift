@@ -21,8 +21,8 @@ public class UnityPack {
         }
     }
     
-    public static func extractData(asset: Asset) -> (cards: [Any], textures: [String: ObjectPointer]) {
-        var cards = [Any]()
+    public static func extractData(asset: Asset, filterIds: [String]? = nil) -> (cards: [(path: String, tile: Any?)], textures: [String: ObjectPointer]) {
+        var cards = [(path: String, tile: Any?)]()
         var textures = [String: ObjectPointer]()
         
         for obj in asset.objects.values {
@@ -46,14 +46,41 @@ public class UnityPack {
             
             else if obj.type == "GameObject" {
                 let d = obj.read() as! GameObject
-                print(d)
-                /*if let d = GameObject(obj.read() as? [String: Any]) {
-                    
-                }*/
+                let cardid = d.name
+                if let filters = filterIds {
+                    if !filters.contains(cardid) {
+                        continue
+                    }
+                }
+                if ["CardDefTemplate", "HiddenCard"].contains(cardid) {
+                    // not a real card
+                    cards.append((path: "", tile: nil))
+                    continue
+                }
+                if d.component.count < 2 {
+                    // not a real card
+                    continue
+                }
+                guard let carddef = d.component[1].1.resolve() as? [String:Any?] else {
+                    continue
+                }
                 
+                guard var path = carddef["m_PortraitTexturePath"] as? String else {
+                    continue
+                }
+                
+                if path == "" {
+                    continue
+                }
+                
+                path = "final/" + path
+                
+                if let tile = carddef["m_PortraitTexturePath"] as? ObjectPointer, let material = tile.resolve() as? Material {
+                    cards.append((path: path.lowercased(), tile: material.savedProperties))
+                } else {
+                    cards.append((path: path.lowercased(), tile: nil))
+                }
             }
-            
-            //print("object: \(obj)")
         }
         
         
