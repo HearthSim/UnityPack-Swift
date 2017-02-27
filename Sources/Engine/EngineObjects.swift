@@ -13,7 +13,7 @@ class EngineObject : NSObject {
     
     let name: String
     
-    required init(from dict: [String: Any]) {
+    required init(from dict: [String: Any?]) {
         if let n = dict["m_Name"] {
             name = n as! String
         } else {
@@ -31,7 +31,7 @@ class GameObject : EngineObject {
     let layer: Int
     let tag: Int16
     
-    required init(from dict: [String: Any]) {
+    required init(from dict: [String: Any?]) {
         active = dict["m_IsActive"] as! Bool
         self.component = (dict["m_Component"] as! [(Any?, Any?)]).map { ($0.0 as! Int32, $0.1 as! ObjectPointer) }
         layer = Int(dict["m_Layer"] as! UInt32)

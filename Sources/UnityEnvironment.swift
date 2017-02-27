@@ -66,13 +66,14 @@ public class UnityEnvironment: CustomStringConvertible {
     }
     
     func discover(name: String) {
-        for bundle in self.bundles.values {
-            if let bPath = bundle.path {
-                let dirname = (bPath as NSString).deletingLastPathComponent
+        fatalError("Environment::discover is not yet implemented")
+        /*for bundle in self.bundles.values {
+            //if let bPath = bundle.path {
+                //let dirname = (bPath as NSString).deletingLastPathComponent
                 // TODO: look for cab files and call load
-                fatalError("Environment::discover is not yet implemented")
-            }
-        }
+                
+            //}
+        }*/
     }
     
     private func populateAssets() {

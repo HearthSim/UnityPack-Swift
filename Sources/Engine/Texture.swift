@@ -17,7 +17,7 @@ class Material : EngineObject {
     let shaderKeywords: String
     let savedProperties: [String: [String: Any?]]
     
-    required init(from dict: [String: Any]) {
+    required init(from dict: [String: Any?]) {
         globalIlluminationFlags = dict["m_LightmapFlags"] as! UInt32
         renderQueue = dict["m_CustomRenderQueue"] as! Int32
         shader = dict["m_Shader"] as! ObjectPointer

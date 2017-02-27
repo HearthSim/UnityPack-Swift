@@ -83,7 +83,7 @@ public class AssetBundle: CustomStringConvertible {
         guard let data = try self.readCompressedData(buf: buf, compression: compression, blockSize: uiblockSize) else { return }
         
         let blk = BinaryReader(data: UPData(withData: data))
-        let guid = blk.readBytes(count: 16)
+        let _ = blk.readBytes(count: 16) // guid
         let num_blocks = blk.readInt()
 
         // read Archive block infos

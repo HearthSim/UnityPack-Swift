@@ -8,7 +8,7 @@
 
 import Foundation
 
-func loadObject(type: TypeTree, dict: [String: Any]) -> Any? {
+func loadObject(type: TypeTree, dict: [String: Any?]) -> Any? {
     let clsname = type.type
     
     if let classType = NSClassFromString(clsname) as? EngineObject.Type {
@@ -45,12 +45,12 @@ public class ObjectInfo: CustomStringConvertible {
         } else if self.asset.typenames[self.typeId] == nil {
             let rawdata = self.read()
             var typename = ""
-            if let dict = rawdata as? [String: Any] {
+            if let dict = rawdata as? [String: Any?] {
                 
                 if let script = dict["m_Script"] {
                     if let pointer = script as? ObjectPointer {
                         if let resolved = pointer.resolve() {
-                            if let ressdict = resolved as? [String: Any] {
+                            if let ressdict = resolved as? [String: Any?] {
                                 if let name = ressdict["m_ClassName"] {
                                     typename = name as! String
                                 } else {
@@ -268,25 +268,3 @@ public class ObjectPointer: CustomStringConvertible {
         return nil
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

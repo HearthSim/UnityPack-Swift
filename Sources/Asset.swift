@@ -27,8 +27,8 @@ public class Asset: CustomStringConvertible {
     var endianness: UInt32 = 0
     
     var tree = TypeMetadata(asset: nil)
-    lazy var assetRefs: [Any] = {
-        var aRef = [Any]()
+    lazy var assetRefs: [Any?] = {
+        var aRef = [Any?]()
         aRef.append(self)
         return aRef;
     }()
@@ -43,7 +43,7 @@ public class Asset: CustomStringConvertible {
         
         self.bundle = bundle
         self.environment = bundle.environment
-        let offset: Int = buf.tell
+        //let offset: Int = buf.tell
         self._buf = BinaryReader(data: buf)
         self.tree = TypeMetadata(asset: self)
         
@@ -81,7 +81,7 @@ public class Asset: CustomStringConvertible {
     
     public init?(fromFile filePath: String) {
         fatalError("Error: Asset::fromFile is not yet implemented")
-        self.name = (filePath as NSString).lastPathComponent
+        /*self.name = (filePath as NSString).lastPathComponent
         self._buf_ofs = 0
         
         // TODO: fileHandle bla bla
@@ -90,6 +90,7 @@ public class Asset: CustomStringConvertible {
         if let path = self.base_path {
             self.environment = UnityEnvironment(base_path: path)
         }
+        */
     }
     
     public func getAsset(path: String) -> Asset? {

@@ -10,9 +10,9 @@ import Foundation
 import UnityPack
 
 do {
-    let files = [/*"cardtextures0",*/ "cards0"/*, "cardxml0"*/]
-    //var cards = []
-    //var textures = []
+    let files = ["cardtextures0", "cards0", "cardxml0"]
+    var allCards = [[(path: String, tile: Any?)]]()
+    var allTtextures = [[String: ObjectPointer]]()
     
     for file in files {
         let filePath = "/Applications/Hearthstone/Data/OSX/" + file + ".unity3d"
@@ -21,16 +21,13 @@ do {
             
             for asset in bundle.assets {
                 print("Parsing \(asset.name)")
-                let (cards, textures) = UnityPack.extractData(asset: asset)
-                
+                let (cards, textures) = UnityPack.extractCardsAndTextures(asset: asset)
+                allCards.append(cards)
+                allTtextures.append(textures)
             }
         }
-        
-        
     }
-    
-    
-    
+
 } catch let error {
     print("\(error)")
 }

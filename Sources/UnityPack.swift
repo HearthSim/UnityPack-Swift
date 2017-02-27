@@ -21,7 +21,7 @@ public class UnityPack {
         }
     }
     
-    public static func extractData(asset: Asset, filterIds: [String]? = nil) -> (cards: [(path: String, tile: Any?)], textures: [String: ObjectPointer]) {
+    public static func extractCardsAndTextures(asset: Asset, filterIds: [String]? = nil) -> (cards: [(path: String, tile: Any?)], textures: [String: ObjectPointer]) {
         var cards = [(path: String, tile: Any?)]()
         var textures = [String: ObjectPointer]()
         
@@ -76,17 +76,14 @@ public class UnityPack {
                 
                 path = "final/" + path
                 
-                if let tile = carddef["m_DeckCardBarPortrait"] as? ObjectPointer {
-                    let material = tile.resolve() as? Material
-                    //cards.append((path: path.lowercased(), tile: material.savedProperties))
+                if let tile = carddef["m_DeckCardBarPortrait"] as? ObjectPointer, let material = tile.resolve() as? Material {
+                    cards.append((path: path.lowercased(), tile: material.savedProperties))
                 } else {
                     cards.append((path: path.lowercased(), tile: nil))
                 }
             }
         }
-        
-        
-        
+ 
         return (cards, textures)
     }
     
