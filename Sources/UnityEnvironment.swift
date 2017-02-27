@@ -79,7 +79,7 @@ public class UnityEnvironment: CustomStringConvertible {
         for bundle in self.bundles.values {
             for asset in bundle.assets {
                 let assetName = asset.name.lowercased()
-                if !self.assets.keys.contains(assetName) {
+                if self.assets[assetName] == nil {
                     self.assets[assetName] = asset
                 }
             }
@@ -100,11 +100,11 @@ public class UnityEnvironment: CustomStringConvertible {
         let name = (urlComponents.path as NSString).lastPathComponent
         let archive = (urlComponents.path as NSString).deletingLastPathComponent
         
-        if !self.bundles.keys.contains(archive) {
+        if self.bundles[archive] == nil {
             self.discover(name: archive)
         }
         
-        if !self.bundles.keys.contains(archive) {
+        if self.bundles[archive] == nil {
             print("Error: Unsupported scheme in URL: \(path)")
             return nil
         }

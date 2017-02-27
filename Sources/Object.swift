@@ -42,7 +42,7 @@ public class ObjectInfo: CustomStringConvertible {
     var type: String {
         if self.typeId > 0 {
             return UnityClass.getUnityClass(fromType: self.typeId)
-        } else if !self.asset.typenames.keys.contains(self.typeId) {
+        } else if self.asset.typenames[self.typeId] == nil {
             let rawdata = self.read()
             var typename = ""
             if let dict = rawdata as? [String: Any] {

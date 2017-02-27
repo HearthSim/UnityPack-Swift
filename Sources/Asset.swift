@@ -203,7 +203,7 @@ public class Asset: CustomStringConvertible {
         
         if let oType = self.tree.typeTrees[Int(obj.typeId)] {
             self.types[Int(obj.typeId)] = oType
-        } else if !self.types.keys.contains(Int(obj.typeId)) {
+        } else if self.types[Int(obj.typeId)] == nil {
             let trees = TypeMetadata.defaultTypeWith(asset: self).typeTrees
             if let oType = trees[Int(obj.classId)] {
                 self.types[Int(obj.typeId)] = oType
@@ -213,7 +213,7 @@ public class Asset: CustomStringConvertible {
             }
         }
         
-        if self._objects.keys.contains(obj.pathId) {
+        if self._objects[obj.pathId] != nil {
             print("Duplicate asset object: \(obj) (path_id=\(obj.pathId))")
         }
         

@@ -25,7 +25,8 @@ public class UnityPack {
         var cards = [(path: String, tile: Any?)]()
         var textures = [String: ObjectPointer]()
         
-        for obj in asset.objects.values {
+        let objects = asset.objects
+        for obj in objects.values {
             
             if obj.type == "AssetBundle" {
                 if let dict = obj.read() as? [String: Any], let items = dict["m_Container"] as? [(first: Any?, second: Any?)] {
@@ -75,8 +76,9 @@ public class UnityPack {
                 
                 path = "final/" + path
                 
-                if let tile = carddef["m_PortraitTexturePath"] as? ObjectPointer, let material = tile.resolve() as? Material {
-                    cards.append((path: path.lowercased(), tile: material.savedProperties))
+                if let tile = carddef["m_DeckCardBarPortrait"] as? ObjectPointer {
+                    let material = tile.resolve() as? Material
+                    //cards.append((path: path.lowercased(), tile: material.savedProperties))
                 } else {
                     cards.append((path: path.lowercased(), tile: nil))
                 }
