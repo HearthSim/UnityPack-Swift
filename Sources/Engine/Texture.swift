@@ -156,6 +156,18 @@ class Texture2D : Texture {
     let completeImageSize: Int32
     let streamData: [String: Any?]
     
+    public let implementedFormats = [TextureFormat.Alpha8,
+                                     TextureFormat.ARGB4444,
+                                     TextureFormat.RGBA4444,
+                                     TextureFormat.RGB565,
+                                     TextureFormat.RGB24,
+                                     TextureFormat.RGBA32,
+                                     TextureFormat.ARGB32,
+                                     TextureFormat.DXT1,
+                                     TextureFormat.DXT1Crunched,
+                                     TextureFormat.DXT5,
+                                     TextureFormat.DXT5Crunched]
+    
     required init(from dict: [String: Any?]) {
         data = Data(bytes: dict["image data"] as! [UInt8])
         lightmapFormat = dict["m_LightmapFormat"] as! Int32
@@ -172,7 +184,36 @@ class Texture2D : Texture {
         super.init(from: dict)
     }
     
+    var imageData: Data {
+        if let path = self.streamData["path"] {
+            let offset = self.streamData["offset"]
+            let size = self.streamData["size"]
+            return self.data//self.asset.environment.getStream(path, offset, size)
+        }
+        return self.data
+    }
+    
     var image: NSImage? {
+        
+        if !implementedFormats.contains(self.format) {
+            print("image format not supported: \(self.format)")
+            return nil
+        }
+        
+        var codec = ""
+        if [TextureFormat.DXT1, TextureFormat.DXT1Crunched].contains(self.format) {
+            codec = "bcn"
+        } else if [TextureFormat.DXT5, TextureFormat.DXT5Crunched].contains(self.format) {
+            codec = "bcn"
+        } else {
+            codec = "raw"
+        }
+        
+        let mode = ["RGB", "RGB;16"].contains(self.format.pixelFormat) ? "RGB" : "RGBA"
+        let size = (self.width, self.height)
+        
+        let imageData = self.imageData
+        
         return NSImage(data:data)
     }
 }

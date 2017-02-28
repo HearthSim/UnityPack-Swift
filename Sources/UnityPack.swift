@@ -16,43 +16,43 @@ public class UnityPack {
     
     private var env: UnityEnvironment?
     
-    // process the following files for info
-    let resourceFiles = ["cardtextures0", "cards0", "cardxml0"]
+    //let resourceFiles = ["cardtextures0", "cards0", "cardxml0"]
     
     private var allCards = [String: (path: String, tile: Any?)]()
     private var allTextures = [String: ObjectPointer]()
     
     public init?(with hearthstonePath: String) {
-        
         do {
-            for file in resourceFiles {
-                let filePath = hearthstonePath + "/Data/OSX/" + file + ".unity3d"
-                
-                if let bundle = try load(withFilePath: filePath) {
-                    
-                    for asset in bundle.assets {
-                        print("Parsing asset \(asset.name)")
-                        let (cards, textures) = extractCardsAndTextures(asset: asset)
-                        allCards += cards
-                        allTextures += textures
+        // process all .unity3d files
+        let fileManager = FileManager.default
+        let rootPath = hearthstonePath + "/Data/OSX/"
+        try fileManager.enumerator(atPath: rootPath)?.forEach({ (e) in
+            if let e = e as? String, let url = URL(string: e) {
+                if url.pathExtension == "unity3d" && (e.range(of:"cards") != nil || e.range(of:"cardtextures") != nil
+                    || e.range(of:"cardxml") != nil) {
+                    print("Loading \(e)")
+                    if let bundle = try load(withFilePath: rootPath + e) {
+                        
+                        for asset in bundle.assets {
+                            print("Parsing asset \(asset.name)")
+                            let (cards, textures) = extractCardsAndTextures(asset: asset)
+                            allCards += cards
+                            allTextures += textures
+                        }
                     }
                 }
             }
-            
-            let paths = allCards.map {$0.value.path}
-            print("Found \(allCards.count) cards, \(allTextures.count) textures including \(Set(paths).count) unique in use.")
-            /*
-            for key in allCards.keys.sorted() {
-                guard let value = allCards[key] else { break }
-                print("\(key)")
-            }*/
-            
+        })
+
+        let paths = allCards.map {$0.value.path}
+        print("Found \(allCards.count) cards, \(allTextures.count) textures including \(Set(paths).count) unique in use.")
+
         } catch let error {
             print("\(error)")
             return nil
         }
     }
-    
+
     public func getTexture(cardid: String) -> NSImage? {
         guard let (path, _) = allCards[cardid] else {
             print("No card found with id \(cardid)")
