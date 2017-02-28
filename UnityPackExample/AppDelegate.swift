@@ -7,16 +7,25 @@
 //
 
 import Cocoa
+import UnityPack
 
-//@NSApplicationMain
+@NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     @IBOutlet weak var window: NSWindow!
-
-
+    @IBOutlet weak var imageView: NSImageView!
+    
     func applicationDidFinishLaunching(_ aNotification: Notification) {
 
-        NSApplication.shared().terminate(self)
+        guard let unitypack = UnityPack(with: "/Applications/Hearthstone") else {
+            print("Error initializing UnityPack")
+            exit(-1)
+        }
+        
+        // leper gnome
+        if let image = unitypack.getTexture(cardid: "EX1_029") {
+            imageView.image = image
+        }
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {

@@ -34,7 +34,6 @@
 		1CB7D1911E4B63EA0019D5D6 /* Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB7D1901E4B63EA0019D5D6 /* Type.swift */; };
 		1CBCD5851E5703C3008DD5E4 /* Resources in Resources */ = {isa = PBXBuildFile; fileRef = 1CBCD5841E5703C3008DD5E4 /* Resources */; };
 		1CBCD5881E5F0328008DD5E4 /* EngineObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CBCD5871E5F0328008DD5E4 /* EngineObjects.swift */; };
-		1CBCD58A1E5F4DF5008DD5E4 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CBCD5891E5F4DF5008DD5E4 /* main.swift */; };
 		4323C60F1E1C452D00C97896 /* UnityPack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4323C60E1E1C452D00C97896 /* UnityPack.swift */; };
 		4323C6181E1C45C500C97896 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4323C6171E1C45C500C97896 /* AppDelegate.swift */; };
 		4323C61A1E1C45C500C97896 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4323C6191E1C45C500C97896 /* Assets.xcassets */; };
@@ -83,7 +82,6 @@
 		1CB7D1901E4B63EA0019D5D6 /* Type.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Type.swift; sourceTree = "<group>"; };
 		1CBCD5841E5703C3008DD5E4 /* Resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources; sourceTree = "<group>"; };
 		1CBCD5871E5F0328008DD5E4 /* EngineObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EngineObjects.swift; path = Engine/EngineObjects.swift; sourceTree = "<group>"; };
-		1CBCD5891E5F4DF5008DD5E4 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		4323C6021E1C445E00C97896 /* UnityPack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = UnityPack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4323C6051E1C445E00C97896 /* UnityPack-Swift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UnityPack-Swift.h"; sourceTree = "<group>"; };
 		4323C6061E1C445E00C97896 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -213,7 +211,6 @@
 				4323C6191E1C45C500C97896 /* Assets.xcassets */,
 				4323C61B1E1C45C500C97896 /* MainMenu.xib */,
 				4323C61E1E1C45C500C97896 /* Info.plist */,
-				1CBCD5891E5F4DF5008DD5E4 /* main.swift */,
 			);
 			path = UnityPackExample;
 			sourceTree = "<group>";
@@ -368,7 +365,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1CBCD58A1E5F4DF5008DD5E4 /* main.swift in Sources */,
 				4323C6181E1C45C500C97896 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

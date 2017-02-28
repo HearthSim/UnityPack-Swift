@@ -14,6 +14,8 @@ func loadObject(type: TypeTree, dict: [String: Any?]) -> Any? {
     if let classType = NSClassFromString(clsname) as? EngineObject.Type {
         let obj = classType.init(from: dict)
         return obj
+    } else {
+        // print("Missing type implementation for \(clsname)")
     }
     
     return dict

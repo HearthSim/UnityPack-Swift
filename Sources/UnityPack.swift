@@ -7,12 +7,72 @@
 //
 
 import Foundation
+import AppKit
+
+// allows adding dictionaries
+private func +=<K, V> ( left: inout [K : V], right: [K : V]) { for (k, v) in right { left[k] = v } }
 
 public class UnityPack {
     
-    private static var env: UnityEnvironment?;
+    private var env: UnityEnvironment?
     
-    public static func load(withFilePath filePath: String) throws -> AssetBundle? {
+    // process the following files for info
+    let resourceFiles = ["cardtextures0", "cards0", "cardxml0"]
+    
+    private var allCards = [String: (path: String, tile: Any?)]()
+    private var allTextures = [String: ObjectPointer]()
+    
+    public init?(with hearthstonePath: String) {
+        
+        do {
+            for file in resourceFiles {
+                let filePath = hearthstonePath + "/Data/OSX/" + file + ".unity3d"
+                
+                if let bundle = try load(withFilePath: filePath) {
+                    
+                    for asset in bundle.assets {
+                        print("Parsing asset \(asset.name)")
+                        let (cards, textures) = extractCardsAndTextures(asset: asset)
+                        allCards += cards
+                        allTextures += textures
+                    }
+                }
+            }
+            
+            let paths = allCards.map {$0.value.path}
+            print("Found \(allCards.count) cards, \(allTextures.count) textures including \(Set(paths).count) unique in use.")
+            /*
+            for key in allCards.keys.sorted() {
+                guard let value = allCards[key] else { break }
+                print("\(key)")
+            }*/
+            
+        } catch let error {
+            print("\(error)")
+            return nil
+        }
+    }
+    
+    public func getTexture(cardid: String) -> NSImage? {
+        guard let (path, _) = allCards[cardid] else {
+            print("No card found with id \(cardid)")
+            return nil
+        }
+        
+        guard let pptr = allTextures[path] else {
+            print("Path not found for \(cardid)")
+            return nil
+        }
+        
+        guard let texture = pptr.resolve() as? Texture2D, let image = texture.image else {
+            print("Image data cannot be resolved")
+            return nil
+        }
+        
+        return image
+    }
+
+    private func load(withFilePath filePath: String) throws -> AssetBundle? {
         if let e = env {
             return try e.load(filePath);
         } else {
@@ -21,8 +81,8 @@ public class UnityPack {
         }
     }
     
-    public static func extractCardsAndTextures(asset: Asset, filterIds: [String]? = nil) -> (cards: [(path: String, tile: Any?)], textures: [String: ObjectPointer]) {
-        var cards = [(path: String, tile: Any?)]()
+    private func extractCardsAndTextures(asset: Asset, filterIds: [String]? = nil) -> (cards: [String: (path: String, tile: Any?)], textures: [String: ObjectPointer]) {
+        var cards = [String: (path: String, tile: Any?)]()
         var textures = [String: ObjectPointer]()
         
         let objects = asset.objects
@@ -55,7 +115,7 @@ public class UnityPack {
                 }
                 if ["CardDefTemplate", "HiddenCard"].contains(cardid) {
                     // not a real card
-                    cards.append((path: "", tile: nil))
+                    cards[cardid] = (path: "", tile: nil)
                     continue
                 }
                 if d.component.count < 2 {
@@ -77,9 +137,9 @@ public class UnityPack {
                 path = "final/" + path
                 
                 if let tile = carddef["m_DeckCardBarPortrait"] as? ObjectPointer, let material = tile.resolve() as? Material {
-                    cards.append((path: path.lowercased(), tile: material.savedProperties))
+                    cards[cardid] = (path: path.lowercased(), tile: material.savedProperties)
                 } else {
-                    cards.append((path: path.lowercased(), tile: nil))
+                    cards[cardid] = (path: path.lowercased(), tile: nil)
                 }
             }
         }
