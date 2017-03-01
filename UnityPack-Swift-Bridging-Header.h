@@ -11,5 +11,6 @@
 
 #import "LZ4/NSData+LZ4.h"
 #import "LZMA/NSData+LZMA.h"
+#import "Sources/Engine/BcnDecoder.h"
 
 #endif /* UnityPack_Swift_Bridging_Header_h */

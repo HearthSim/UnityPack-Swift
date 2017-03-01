@@ -39,6 +39,9 @@
 		4323C61A1E1C45C500C97896 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4323C6191E1C45C500C97896 /* Assets.xcassets */; };
 		4323C61D1E1C45C500C97896 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4323C61B1E1C45C500C97896 /* MainMenu.xib */; };
 		BCDFEE901E6384D800445830 /* Texture.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCDFEE8F1E6384D800445830 /* Texture.swift */; };
+		BCDFEE921E672F7C00445830 /* BcnDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = BCDFEE911E672F7C00445830 /* BcnDecoder.m */; };
+		BCDFEE961E6769AE00445830 /* bcndecode.c in Sources */ = {isa = PBXBuildFile; fileRef = BCDFEE941E6769AE00445830 /* bcndecode.c */; };
+		BCDFEE971E6769AE00445830 /* bcndecode.h in Headers */ = {isa = PBXBuildFile; fileRef = BCDFEE951E6769AE00445830 /* bcndecode.h */; };
 		BCF86DFE1E4A75E10046A63A /* Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCF86DFD1E4A75E10046A63A /* Object.swift */; };
 /* End PBXBuildFile section */
 
@@ -92,6 +95,10 @@
 		4323C61C1E1C45C500C97896 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		4323C61E1E1C45C500C97896 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BCDFEE8F1E6384D800445830 /* Texture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Texture.swift; path = Engine/Texture.swift; sourceTree = "<group>"; };
+		BCDFEE911E672F7C00445830 /* BcnDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BcnDecoder.m; path = Engine/BcnDecoder.m; sourceTree = "<group>"; };
+		BCDFEE931E67300300445830 /* BcnDecoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = BcnDecoder.h; path = Engine/BcnDecoder.h; sourceTree = "<group>"; };
+		BCDFEE941E6769AE00445830 /* bcndecode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = bcndecode.c; path = Engine/bcndecode.c; sourceTree = "<group>"; };
+		BCDFEE951E6769AE00445830 /* bcndecode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bcndecode.h; path = Engine/bcndecode.h; sourceTree = "<group>"; };
 		BCF86DFD1E4A75E10046A63A /* Object.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Object.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -151,6 +158,10 @@
 			children = (
 				1CBCD5871E5F0328008DD5E4 /* EngineObjects.swift */,
 				BCDFEE8F1E6384D800445830 /* Texture.swift */,
+				BCDFEE911E672F7C00445830 /* BcnDecoder.m */,
+				BCDFEE931E67300300445830 /* BcnDecoder.h */,
+				BCDFEE941E6769AE00445830 /* bcndecode.c */,
+				BCDFEE951E6769AE00445830 /* bcndecode.h */,
 			);
 			name = Engine;
 			sourceTree = "<group>";
@@ -226,6 +237,7 @@
 				1C840DFC1E22317A004C3570 /* LzmaSDKObjCBufferProcessor.h in Headers */,
 				1C840E201E2234F8004C3570 /* LzmaAppleCommon.h in Headers */,
 				1C840E0C1E22321D004C3570 /* Lzma2Dec.h in Headers */,
+				BCDFEE971E6769AE00445830 /* bcndecode.h in Headers */,
 				1C840E121E2233BD004C3570 /* Compiler.h in Headers */,
 				1C840E181E2233E6004C3570 /* LzmaDec.h in Headers */,
 				1C840E101E2233AD004C3570 /* Precomp.h in Headers */,
@@ -348,8 +360,10 @@
 				1C840DDF1E1E5A23004C3570 /* UnityEnvironment.swift in Sources */,
 				1C840DFE1E2231BD004C3570 /* LzmaSDKObjCBufferProcessor.mm in Sources */,
 				BCDFEE901E6384D800445830 /* Texture.swift in Sources */,
+				BCDFEE921E672F7C00445830 /* BcnDecoder.m in Sources */,
 				1CB7D1911E4B63EA0019D5D6 /* Type.swift in Sources */,
 				1C840DE31E1E6739004C3570 /* Asset.swift in Sources */,
+				BCDFEE961E6769AE00445830 /* bcndecode.c in Sources */,
 				1C840DE71E1E7863004C3570 /* Enums.swift in Sources */,
 				1C840DF31E1E99CF004C3570 /* lz4hc.c in Sources */,
 				1C840E221E22358B004C3570 /* NSData+LZMA.m in Sources */,

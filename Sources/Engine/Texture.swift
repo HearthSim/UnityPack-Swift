@@ -200,20 +200,16 @@ class Texture2D : Texture {
             return nil
         }
         
-        var codec = ""
+        var codec = EncodeType_raw
         if [TextureFormat.DXT1, TextureFormat.DXT1Crunched].contains(self.format) {
-            codec = "bcn"
+            codec = EncodeType_bc1
         } else if [TextureFormat.DXT5, TextureFormat.DXT5Crunched].contains(self.format) {
-            codec = "bcn"
-        } else {
-            codec = "raw"
+            codec = EncodeType_bc5
         }
         
         let mode = ["RGB", "RGB;16"].contains(self.format.pixelFormat) ? "RGB" : "RGBA"
         let size = (self.width, self.height)
         
-        let imageData = self.imageData
-        
-        return NSImage(data:data)
+        return BcnDecoder.decodeImageFromdata(self.imageData, size: NSSize(width: Int(self.width), height: Int(self.height)), encoding: codec)
     }
 }
