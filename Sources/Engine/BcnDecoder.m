@@ -7,21 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AppKit/AppKit.h>
 #import "BcnDecoder.h"
 #include "bcndecode.h"
 
 @implementation BcnDecoder
 
 +(NSImage*)decodeImageFromdata:(NSData*) data size:(NSSize) size encoding:(EncodeType) encoding {
-    int src_size = 4 * size.width * size.height;
-    int dst_size = src_size;
-    int flip = 0;
+    int dst_size = 4 * size.width * size.height;
+    int flip = 1;
     
-    if (encoding == EncodeType_bc1 || encoding == EncodeType_bc4) {
-        src_size >>= 3;
-    } else {
-        src_size >>= 2;
-    }
     if (encoding == EncodeType_bc4) {
         dst_size >>= 2;
     } else if (encoding == EncodeType_bc6) {
@@ -30,14 +25,23 @@
     uint8_t *src = (uint8_t*)data.bytes;
     uint8_t *dst = malloc(dst_size*sizeof(uint8_t));
     
-    NSImage* result = NULL;
-    if (BcnDecode(dst, dst_size, src, src_size, size.width, size.height, encoding, BcnDecoderFormatARGB, flip) < 0) {
-        // TODO: create nsimagerep from the result
-        
+    NSImage* result = nil;
+    int data_read = BcnDecode(dst, dst_size, src, (int)data.length, size.width, size.height, encoding, BcnDecoderFormatRGBA, flip);
+    if (data_read < 0) {
+        printf("error decoding image data");
+        free(dst);
+        return nil;
     }
     
-    free(dst);
+    NSBitmapImageRep* bitmap = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:&dst pixelsWide:size.width pixelsHigh:size.height bitsPerSample:8 samplesPerPixel:4 hasAlpha:YES isPlanar:NO colorSpaceName:NSDeviceRGBColorSpace bytesPerRow:0 bitsPerPixel:0];
 
+    result = [[NSImage alloc] initWithSize:size];
+    [result addRepresentation:bitmap];
+    
+    //NSDictionary* prop = [[NSDictionary alloc] init];
+    //NSData *pngData = [bitmap representationUsingType:NSPNGFileType properties:prop];
+    //[pngData writeToFile:@"/Users/Haibane/Downloads/aaa.png" atomically:YES];
+    
     return result;
 }
 
