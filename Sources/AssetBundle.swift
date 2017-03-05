@@ -8,6 +8,10 @@
 
 import Foundation
 
+enum AssetBundleError: Error {
+    case FileReadingError
+}
+
 public class AssetBundle: CustomStringConvertible {
     public var path: String?
     let environment: UnityEnvironment
@@ -53,11 +57,13 @@ public class AssetBundle: CustomStringConvertible {
     }
     
     public func load(_ filePath: String) throws {
-        let data = try Data(contentsOf: URL(fileURLWithPath: filePath))
         
+        guard let fileHandle = FileHandle(forReadingAtPath: filePath) else {
+            throw AssetBundleError.FileReadingError
+        }
         self.path = (filePath as NSString).lastPathComponent
         
-        let buf = BinaryReader(data: UPData(withData:data))
+        let buf = BinaryReader(data: FileData(withFileHandle: fileHandle))
         
         self.signature = FileSignature(rawValue: buf.readString())
         self.formatVersion = buf.readInt()

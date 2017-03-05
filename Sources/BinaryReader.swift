@@ -57,6 +57,24 @@ class UPData : Readable {
     }
 }
 
+class FileData : Readable {
+    let fileHandle: FileHandle
+    
+    init(withFileHandle fileHandle: FileHandle) {
+        self.fileHandle = fileHandle
+    }
+    
+    func readBytes(count: Int) -> [UInt8] {
+        return fileHandle.readData(ofLength: count).toByteArray()
+    }
+    
+    var tell: Int {return Int(fileHandle.offsetInFile)}
+    
+    func seek(count: Int, whence: Int = 0) {
+        fileHandle.seek(toFileOffset: UInt64(count))
+    }
+}
+
 public enum ByteOrder {
     case bigEndian
     case littleEndian
