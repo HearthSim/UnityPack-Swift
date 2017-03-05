@@ -799,7 +799,7 @@ typedef struct {
 } BcnDecoderState;
 
 static void swizzle_copy(int swizzle, uint8_t *dst, const uint8_t *src, int sz) {
-    if (sz < 4 || swizzle == 0 || swizzle == 0x1b) {
+    if (sz < 4 || swizzle == 0 || swizzle == 0xe4) {
         memcpy(dst, src, sz);
         return;
     }
@@ -906,10 +906,10 @@ int BcnDecode(uint8_t *dst, int dst_size, const uint8_t *src, int src_size, int 
         return -1;
     }
     switch (dst_format) {
-        case BcnDecoderFormatRGBA: state.swizzle = 0b00011011; break;
-        case BcnDecoderFormatBGRA: state.swizzle = 0b10010011; break;
-        case BcnDecoderFormatARGB: state.swizzle = 0b11000110; break;
-        case BcnDecoderFormatABGR: state.swizzle = 0b11100100; break;
+        case BcnDecoderFormatRGBA: state.swizzle = 0b11100100; break;
+        case BcnDecoderFormatBGRA: state.swizzle = 0b11000110; break;
+        case BcnDecoderFormatARGB: state.swizzle = 0b10010011; break;
+        case BcnDecoderFormatABGR: state.swizzle = 0b00011011; break;
         default: return -1;
     }
     state.width = width;

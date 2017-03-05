@@ -26,7 +26,7 @@
     uint8_t *dst = malloc(dst_size*sizeof(uint8_t));
     
     NSImage* result = nil;
-    int dst_format = encoding == EncodeType_bc1 ? BcnDecoderFormatRGBA : BcnDecoderFormatABGR;
+    int dst_format = BcnDecoderFormatRGBA;
     int data_read = BcnDecode(dst, dst_size, src, (int)data.length, size.width, size.height, encoding, dst_format, flip);
     if (data_read < 0) {
         printf("error decoding image data");
@@ -34,7 +34,12 @@
         return nil;
     }
     
-    NSBitmapImageRep* bitmap = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:&dst pixelsWide:size.width pixelsHigh:size.height bitsPerSample:8 samplesPerPixel:4 hasAlpha:YES isPlanar:NO colorSpaceName:NSDeviceRGBColorSpace bytesPerRow:0 bitsPerPixel:0];
+    for (int i = 0; i < dst_size; i += 4) {
+        dst[i + 3] = 0xff; // no alpha
+    }
+    
+    NSBitmapImageRep* bitmap = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:&dst pixelsWide:size.width pixelsHigh:size.height bitsPerSample:8 samplesPerPixel:4 hasAlpha:YES isPlanar:NO colorSpaceName:NSDeviceRGBColorSpace bitmapFormat: NSAlphaNonpremultipliedBitmapFormat bytesPerRow:0 bitsPerPixel:0];
+    
 
     result = [[NSImage alloc] initWithSize:size];
     [result addRepresentation:bitmap];
