@@ -23,7 +23,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         
         // leper gnome
-        if let image = unitypack.getTexture(cardid: "CS2_031") { // CS2_031 , EX1_029
+        let (image, tile) = unitypack.getTexture(cardid: "CS2_031")
+        if let image = image, let tile = tile { // CS2_031 , EX1_029
             imageView.image = image
         }
     }

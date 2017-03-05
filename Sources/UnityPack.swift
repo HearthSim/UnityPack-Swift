@@ -53,23 +53,26 @@ public class UnityPack {
         }
     }
 
-    public func getTexture(cardid: String) -> NSImage? {
-        guard let (path, _) = allCards[cardid] else {
+    public func getTexture(cardid: String) -> (NSImage?, [String: Any?]?) {
+        guard let (path, tile) = allCards[cardid] else {
             print("No card found with id \(cardid)")
-            return nil
+            return (nil, nil)
         }
         
         guard let pptr = allTextures[path] else {
             print("Path not found for \(cardid)")
-            return nil
+            return (nil, nil)
         }
         
         guard let texture = pptr.resolve() as? Texture2D, let image = texture.image else {
             print("Image data cannot be resolved")
-            return nil
+            return (nil, nil)
         }
         
-        return image
+        if let tileDict = tile as? [String: Any?] {
+            return (image, tileDict)
+        }
+        return (image, nil)
     }
 
     private func load(withFilePath filePath: String) throws -> AssetBundle? {
