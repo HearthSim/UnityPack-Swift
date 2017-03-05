@@ -26,7 +26,8 @@
     uint8_t *dst = malloc(dst_size*sizeof(uint8_t));
     
     NSImage* result = nil;
-    int data_read = BcnDecode(dst, dst_size, src, (int)data.length, size.width, size.height, encoding, BcnDecoderFormatRGBA, flip);
+    int dst_format = encoding == EncodeType_bc1 ? BcnDecoderFormatRGBA : BcnDecoderFormatABGR;
+    int data_read = BcnDecode(dst, dst_size, src, (int)data.length, size.width, size.height, encoding, dst_format, flip);
     if (data_read < 0) {
         printf("error decoding image data");
         free(dst);

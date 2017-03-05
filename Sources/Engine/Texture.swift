@@ -185,9 +185,9 @@ class Texture2D : Texture {
     }
     
     var imageData: Data {
-        if let path = self.streamData["path"] {
-            let offset = self.streamData["offset"]
-            let size = self.streamData["size"]
+        if let path = self.streamData["path"] as? String, path != "" {
+            //let offset = self.streamData["offset"]
+            //let size = self.streamData["size"]
             return self.data//self.asset.environment.getStream(path, offset, size)
         }
         return self.data
@@ -204,11 +204,11 @@ class Texture2D : Texture {
         if [TextureFormat.DXT1, TextureFormat.DXT1Crunched].contains(self.format) {
             codec = EncodeType_bc1
         } else if [TextureFormat.DXT5, TextureFormat.DXT5Crunched].contains(self.format) {
-            codec = EncodeType_bc5
+            codec = EncodeType_bc3
         }
         
-        let mode = ["RGB", "RGB;16"].contains(self.format.pixelFormat) ? "RGB" : "RGBA"
-        let size = (self.width, self.height)
+        //let mode = ["RGB", "RGB;16"].contains(self.format.pixelFormat) ? "RGB" : "RGBA"
+        //let size = (self.width, self.height)
         
         return BcnDecoder.decodeImageFromdata(self.imageData, size: NSSize(width: Int(self.width), height: Int(self.height)), encoding: codec)
     }
