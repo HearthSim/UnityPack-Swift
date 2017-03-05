@@ -23,7 +23,7 @@ func loadObject(type: TypeTree, dict: [String: Any?]) -> Any? {
 
 public class ObjectInfo: CustomStringConvertible {
     
-    let asset: Asset
+    unowned var asset: Asset
     var typeId: Int = 0
     var pathId: Int64 = 0
     var dataOffset: UInt32 = 0

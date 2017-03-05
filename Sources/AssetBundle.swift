@@ -14,7 +14,7 @@ enum AssetBundleError: Error {
 
 public class AssetBundle: CustomStringConvertible {
     public var path: String?
-    let environment: UnityEnvironment
+    unowned let environment: UnityEnvironment
     
     public var assets = [Asset]()
     public var name: String?

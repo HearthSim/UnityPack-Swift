@@ -12,8 +12,8 @@ public class Asset: CustomStringConvertible {
     public var name: String = ""
     var loaded = false
     var longObjectIds = false
-    var bundle: AssetBundle?
-    var environment: UnityEnvironment?
+    weak var bundle: AssetBundle?
+    weak var environment: UnityEnvironment?
     
     var _buf: BinaryReader?
     var _buf_ofs: Int = 0

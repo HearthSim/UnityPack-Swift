@@ -133,7 +133,7 @@ class TypeMetadata {
         return instance!
     }
     
-    let asset: Asset?
+    weak var asset: Asset?
     var typeTrees = [Int: TypeTree]()
     var hashes = [Int: [UInt8]]()
     var generatorVersion = ""
