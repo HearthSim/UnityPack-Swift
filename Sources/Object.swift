@@ -75,7 +75,7 @@ public class ObjectInfo: CustomStringConvertible {
                     fatalError("Object type \(dict) is not dictionary type")
                 }
             } else {
-                typename = (self.asset.tree.typeTrees[-150]?.type)!
+                typename = (self.asset.tree.typeTrees[self.typeId]?.type)!
             }
             self.asset.typenames[self.typeId] = typename
         }

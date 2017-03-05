@@ -38,10 +38,6 @@
     result = [[NSImage alloc] initWithSize:size];
     [result addRepresentation:bitmap];
     
-    //NSDictionary* prop = [[NSDictionary alloc] init];
-    //NSData *pngData = [bitmap representationUsingType:NSPNGFileType properties:prop];
-    //[pngData writeToFile:@"/Users/Haibane/Downloads/aaa.png" atomically:YES];
-    
     return result;
 }
 
