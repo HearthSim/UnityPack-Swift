@@ -58,7 +58,7 @@ public class Asset: CustomStringConvertible {
             header_size = reader.readUInt()
             let _ = reader.readUInt()  // size
         } else {
-            header_size = bundle.asset_header_size
+            header_size = bundle.rawDescriptor.assetHeaderSize
         }
         
         // FIXME: this offset needs to be explored more (not implemented yet)
