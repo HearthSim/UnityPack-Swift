@@ -181,7 +181,7 @@ public class AssetBundle: CustomStringConvertible {
         }
         
         let _ = buf.readInt()
-        let _ = buf.readBytes(count: 0)
+        let _ = buf.readBytes(count: 1)
         self.name = buf.readString()
         
         // preload assets
