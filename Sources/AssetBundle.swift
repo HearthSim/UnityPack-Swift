@@ -185,7 +185,7 @@ public class AssetBundle: CustomStringConvertible {
         self.name = buf.readString()
         
         // preload assets
-        buf.seek(count: rawDescriptor.headerSize)
+        buf.seek(count: Int(rawDescriptor.headerSize))
 
         if !self.compressed {
             rawDescriptor.numAssets = buf.readUInt()
@@ -327,13 +327,13 @@ public class ArchiveBlockStorage : Readable {
         
         if let cs = self.current_stream {
             let k = new_cursor - self.current_block_start
-            cs.seek(count: Int32(k))
+            cs.seek(count: k)
         }
     }
     
     func isInCurrentBlock(pos: Int) -> Bool {
         if let cb = self.current_block {
-            let end = self.current_block_start + cb.uncompressedSize
+            let end = self.current_block_start + Int(cb.uncompressedSize)
             return (self.current_block_start <= pos) && (pos < Int(end))
         }
         return false
@@ -352,7 +352,7 @@ public class ArchiveBlockStorage : Readable {
             ofs += b.uncompressedSize
         }
         
-        self.stream.seek(count: self.basepos + baseofs)
+        self.stream.seek(count: self.basepos + Int(baseofs))
         if let cb = self.current_block {
             let buf = self.stream.readBytes(count: Int(cb.compressedSize))
             

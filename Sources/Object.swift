@@ -69,7 +69,7 @@ public class ObjectInfo: CustomStringConvertible {
                             typename = typename[startIndex ... endIndex]
                         }
                     } else {
-                        fatalError("Object type \(script) is not ObjectPointer")
+                        fatalError("Object type \(String(describing: script)) is not ObjectPointer")
                     }
                 } else {
                     fatalError("Object type \(dict) is not dictionary type")
@@ -124,7 +124,7 @@ public class ObjectInfo: CustomStringConvertible {
     
     func read() -> Any? {
         if let buf = self.asset._buf {
-            buf.seek(count: Int32(self.asset._buf_ofs + Int(self.dataOffset)) )
+            buf.seek(count: self.asset._buf_ofs + Int(self.dataOffset))
             if let typeTree = self.typeTree {
                 return self.readValue(type: typeTree, buffer: buf)
             }
