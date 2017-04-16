@@ -132,7 +132,7 @@ public class Asset: CustomStringConvertible {
         
         if let buf = self._buf {
             
-            buf.seek(count: Int32(self._buf_ofs))
+            buf.seek(count: self._buf_ofs)
             
             self.metadataSize = buf.readUInt()
             self.fileSize = buf.readUInt()
@@ -241,7 +241,7 @@ class AssetRef: CustomStringConvertible {
     }
     
     public var description: String {
-        return "<\(String(describing: AssetRef.self)) asset_path=\(self.assetPath), guid=\(self.guid), type=\(self.type), file_path=\(self.filePath)>)"
+        return "<\(String(describing: AssetRef.self)) asset_path=\(self.assetPath), guid=\(String(describing: self.guid)), type=\(self.type), file_path=\(self.filePath)>)"
     }
     
     func load(buffer: BinaryReader) {

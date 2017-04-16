@@ -101,16 +101,16 @@ public class BinaryReader: Readable {
     public func readBytes(count: Int) -> [UInt8] {
         return buffer.readBytes(count: count)
     }
-    
-    func seek(count: Int32) {
-        buffer.seek(count: Int(count), whence: 0)
+
+    func seek(count: Int) {
+        buffer.seek(count: count, whence: 0)
     }
-    
+
     func align() {
         let old = self.tell
         let new = (old + 3) & -4
         if new > old {
-            self.seek(count: Int32(new))
+            self.seek(count: new)
         }
     }
     
