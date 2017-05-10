@@ -144,6 +144,8 @@ public class ObjectInfo: CustomStringConvertible {
     
     func readValue(type: TypeTree, buffer: BinaryReader) -> Any? {
         var align = false
+		let expectedSize = type.size
+		let posBefore = buffer.tell
         let t = type.type
         var firstChild = type.children.count > 0 ? type.children[0] : TypeTree(format: self.asset.format)
         
@@ -223,6 +225,14 @@ public class ObjectInfo: CustomStringConvertible {
             
     
         }
+		
+		// Check to make sure we read at least as many bytes the tree says.
+		// We allow reading more for the case of alignment.
+		let posAfter = buffer.tell
+		let actualSize = posAfter - posBefore
+		if expectedSize > 0 && actualSize < Int(expectedSize) {
+			fatalError("Expected read_value\(type) to read \(expectedSize) bytes, but only read \(actualSize) bytes")
+		}
         
         if align || type.postAlign {
             buffer.align()
