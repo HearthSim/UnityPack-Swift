@@ -133,7 +133,8 @@ public class Asset: CustomStringConvertible {
         if let buf = self._buf {
             
             buf.seek(count: Int32(self._buf_ofs))
-            
+			buf.endianness = .bigEndian
+			
             self.metadataSize = buf.readUInt()
             self.fileSize = buf.readUInt()
             self.format = buf.readUInt()
