@@ -101,15 +101,23 @@ public class ObjectInfo: CustomStringConvertible {
         self.pathId = self.readId(buffer: buffer)
         self.dataOffset = buffer.readUInt() + self.asset.dataOffset
         self.size = buffer.readUInt()
-        self.typeId = Int(buffer.readInt())
-        self.classId = buffer.readInt16()
-        
+		
+		if self.asset.format < 17 {
+			self.typeId = Int(buffer.readInt())
+			self.classId = buffer.readInt16()
+		} else {
+			let typeId = buffer.readInt()
+			let classId = self.asset.tree.classIds[Int(typeId)]
+			self.typeId = Int(classId)
+			self.classId = Int16(classId)
+		}
+
         if self.asset.format <= 10 {
             self.isDestroyed = buffer.readInt16() != 0
-        } else if self.asset.format >= 11 {
+        } else if self.asset.format >= 11 && self.asset.format <= 16 {
             self.unk0 = buffer.readInt16()
             
-            if self.asset.format >= 15 {
+            if self.asset.format >= 15 && self.asset.format <= 16 {
                 self.unk1 = buffer.readUInt8()
             }
         }

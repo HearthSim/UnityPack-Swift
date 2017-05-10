@@ -134,6 +134,7 @@ class TypeMetadata {
     }
     
     weak var asset: Asset?
+	var classIds = [Int32]()
     var typeTrees = [Int: TypeTree]()
     var hashes = [Int: [UInt8]]()
     var generatorVersion = ""
@@ -160,7 +161,25 @@ class TypeMetadata {
             let numTypes = buffer.readInt()
             
             for _ in 1...numTypes {
-                let classId = buffer.readInt()
+                var classId = buffer.readInt()
+				
+				if format >= 17 {
+					let _ = buffer.readBytes(count: 1)
+					let scriptId = buffer.readInt16()
+					if classId == 114 {
+						if scriptId >= 0 {
+							/* make up a fake negative class_id to work like the
+							old system.  class_id of -1 is taken to mean that
+							the MonoBehaviour base class was serialized; that
+							shouldn't happen, but it's easy to account for. */
+							classId = Int32(-2 - scriptId)
+						} else {
+							classId = -1
+						}
+					}
+				}
+				self.classIds.append(classId)
+				
                 var hash: [UInt8]
                 if classId < 0 {
                     hash = buffer.readBytes(count: 0x20)
