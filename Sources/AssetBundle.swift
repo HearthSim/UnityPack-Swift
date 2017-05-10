@@ -351,7 +351,8 @@ public class ArchiveBlockStorage : Readable {
             baseofs += b.compressedSize
             ofs += b.uncompressedSize
         }
-        
+		
+		self.current_block_start = Int(ofs)
         self.stream.seek(count: Int32(self.basepos) + baseofs)
         if let cb = self.current_block {
             let buf = self.stream.readBytes(count: Int(cb.compressedSize))
