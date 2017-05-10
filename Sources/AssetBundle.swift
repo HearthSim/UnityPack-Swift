@@ -333,7 +333,7 @@ public class ArchiveBlockStorage : Readable {
     
     func isInCurrentBlock(pos: Int) -> Bool {
         if let cb = self.current_block {
-            let end = self.current_block_start + cb.uncompressedSize
+            let end = self.current_block_start + Int(cb.uncompressedSize)
             return (self.current_block_start <= pos) && (pos < Int(end))
         }
         return false
@@ -352,7 +352,7 @@ public class ArchiveBlockStorage : Readable {
             ofs += b.uncompressedSize
         }
         
-        self.stream.seek(count: self.basepos + baseofs)
+        self.stream.seek(count: Int32(self.basepos) + baseofs)
         if let cb = self.current_block {
             let buf = self.stream.readBytes(count: Int(cb.compressedSize))
             

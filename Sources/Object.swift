@@ -69,7 +69,7 @@ public class ObjectInfo: CustomStringConvertible {
                             typename = typename[startIndex ... endIndex]
                         }
                     } else {
-                        fatalError("Object type \(script) is not ObjectPointer")
+                        fatalError("Object type \(String(describing: script)) is not ObjectPointer")
                     }
                 } else {
                     fatalError("Object type \(dict) is not dictionary type")

@@ -241,7 +241,7 @@ class AssetRef: CustomStringConvertible {
     }
     
     public var description: String {
-        return "<\(String(describing: AssetRef.self)) asset_path=\(self.assetPath), guid=\(self.guid), type=\(self.type), file_path=\(self.filePath)>)"
+        return "<\(String(describing: AssetRef.self)) asset_path=\(self.assetPath), guid=\(String(describing: self.guid)), type=\(self.type), file_path=\(self.filePath)>)"
     }
     
     func load(buffer: BinaryReader) {
