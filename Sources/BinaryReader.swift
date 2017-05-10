@@ -115,10 +115,16 @@ public class BinaryReader: Readable {
     }
     
     func readUInt8() -> UInt8 {
-        var bytes = readBytes(count: 1)
+        let bytes = readBytes(count: 1)
         return bytes[0]
     }
-    
+	
+	func readInt8() -> Int8 {
+		let bytes = readBytes(count: 1)
+		return Int8(bitPattern: bytes[0])
+	}
+
+	
     func readBool() -> Bool {
         let byte = readBytes(count: 1)[0]
         return byte != 0

@@ -134,6 +134,8 @@ public class ObjectInfo: CustomStringConvertible {
         if let buf = self.asset._buf {
             buf.seek(count: Int32(self.asset._buf_ofs + Int(self.dataOffset)) )
             if let typeTree = self.typeTree {
+				/*let objectBuf = buf.readBytes(count: Int(self.size))
+				return self.readValue(type: typeTree, buffer: BinaryReader(data: UPData(withData:Data(bytes: objectBuf))))*/
                 return self.readValue(type: typeTree, buffer: buf)
             }
         }
@@ -151,7 +153,9 @@ public class ObjectInfo: CustomStringConvertible {
             result = buffer.readBool()
         } else if t == "UInt8" {
             result =  buffer.readUInt8()
-        } else if t == "SInt16" {
+		} else if t == "SInt8" {
+			result =  buffer.readInt8()
+		} else if t == "SInt16" {
             result =  buffer.readInt16()
         } else if t == "UInt16" {
             result =  buffer.readInt16()
