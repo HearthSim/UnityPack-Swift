@@ -66,7 +66,7 @@ public class ObjectInfo: CustomStringConvertible {
                             typename = pointer.type.type
                             let startIndex =  typename.index(typename.startIndex, offsetBy: 5)
                             let endIndex = typename.index(typename.startIndex, offsetBy: -1)
-                            typename = typename[startIndex ... endIndex]
+                            typename = String(typename[startIndex ... endIndex])
                         }
                     } else {
                         fatalError("Object type \(String(describing: script)) is not ObjectPointer")
