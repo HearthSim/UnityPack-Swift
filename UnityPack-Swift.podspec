@@ -7,9 +7,9 @@ Pod::Spec.new do |s|
   s.authors          = { 'Benjamin Michotte' => 'bmichotte@gmail.com', 'Istvan Fehervari' => 'gooksl@gmail.com' }
   s.source           = { :git => 'https://github.com/HearthSim/UnityPack-Swift.git' }
 
-  s.osx.deployment_target     = '10.10'
-
-  s.ios.framework = 'Foundation'
+  s.platform = :osx
+  s.deployment_target = '10.10'
+  s.framework = 'Foundation'
 
   s.source_files = 'Sources/**/*.swift'
   s.requires_arc = true
