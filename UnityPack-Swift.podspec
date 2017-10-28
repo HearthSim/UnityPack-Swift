@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   s.source           = { :git => 'https://github.com/HearthSim/UnityPack-Swift.git' }
 
   s.platform = :osx
-  s.deployment_target = '10.10'
+  s.osx.deployment_target = '10.10'
   s.framework = 'Foundation'
 
   s.source_files = 'Sources/**/*.swift'
