@@ -61,7 +61,7 @@ class TypeTree: CustomStringConvertible {
     func loadBlob(buffer: BinaryReader) {
         let numNodes: UInt32 = buffer.readUInt()
         self.bufferBytes = buffer.readUInt()
-        let nodeData = buffer.readBytes(count: Int(UInt32.multiplyWithOverflow(24, numNodes).0) )
+        let nodeData = buffer.readBytes(count: Int(UInt32(24).multipliedReportingOverflow(by: numNodes).0) )
         self.data = buffer.readBytes(count: Int(self.bufferBytes))
         
         var parents = [TypeTree]()
