@@ -11,6 +11,6 @@ Pod::Spec.new do |s|
   s.osx.deployment_target = '10.10'
   s.framework = 'Foundation'
 
-  s.source_files = 'Sources/**/*.swift'
+  s.source_files = 'Sources/**/*.swift', 'LZMA/**/*.{h|c|m|mm}', 'LZ4/**/*.{h|m|c}'
   s.requires_arc = true
 end
