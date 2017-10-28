@@ -24,12 +24,17 @@ public class AssetBundle: CustomStringConvertible {
     private var unityVersion = ""
     private var generatorVersion = ""
     
-    private var fsFileSize: Int64 = 0
-    private var ciblockSize: UInt32 = 0
-    private var uiblockSize: UInt32 = 0
+    // unity fs params
+    private var unityfsDescriptor = UnityfsDescriptor()
     
-    var asset_header_size: UInt32 = 0 // only when raw
+    // raw params
+    var rawDescriptor = RawDescriptor()
     
+    struct UnityfsDescriptor {
+        var fsFileSize: Int64 = 0
+        var ciblockSize: UInt32 = 0
+        var uiblockSize: UInt32 = 0
+    }
     
     init(_ environment: UnityEnvironment) {
         self.environment = environment;
@@ -78,23 +83,24 @@ public class AssetBundle: CustomStringConvertible {
     }
     
     private func loadUnityFs(buf: BinaryReader) throws {
+        self.unityfsDescriptor = UnityfsDescriptor()
         
-        self.fsFileSize = buf.readInt64()
-        self.ciblockSize = buf.readUInt()
-        self.uiblockSize = buf.readUInt()
+        unityfsDescriptor.fsFileSize = buf.readInt64()
+        unityfsDescriptor.ciblockSize = buf.readUInt()
+        unityfsDescriptor.uiblockSize = buf.readUInt()
         
         let flags = buf.readUInt()
         guard let compression = CompressionType(rawValue: flags & 0x3F) else { return }
         
-        guard let data = try self.readCompressedData(buf: buf, compression: compression, blockSize: uiblockSize) else { return }
+        guard let data = try self.readCompressedData(buf: buf, compression: compression, blockSize: unityfsDescriptor.uiblockSize) else { return }
         
         let blk = BinaryReader(data: UPData(withData: data))
         let _ = blk.readBytes(count: 16) // guid
-        let num_blocks = blk.readInt()
+        let numBlocks = blk.readInt()
 
         // read Archive block infos
         var blocks = [ArchiveBlockInfo]()
-        for _ in 1 ... num_blocks {
+        for _ in 1 ... numBlocks {
             let busize = blk.readInt()
             let bcsize = blk.readInt()
             let bflags = blk.readInt16()
@@ -102,7 +108,7 @@ public class AssetBundle: CustomStringConvertible {
         }
 
         // Read Asset data infos
-        let num_nodes = blk.readInt()
+        let numNodes = blk.readInt()
         struct AssetDataInfo {
             var ofs: Int
             var size: Int
@@ -117,7 +123,7 @@ public class AssetBundle: CustomStringConvertible {
         }
         
         var nodes = [AssetDataInfo]()
-        for _ in 1 ... num_nodes {
+        for _ in 1 ... numNodes {
             let ofs = blk.readInt64()
             let size = blk.readInt64()
             let status = blk.readInt()
@@ -136,17 +142,63 @@ public class AssetBundle: CustomStringConvertible {
         
         // Hacky
         if self.assets.count > 0 {
-            self.name = self.assets[0].name
+            self.name = assets[0].name
         }
     }
     
+    struct RawDescriptor {
+        var fileSize: UInt32 = 0
+        var headerSize: Int32 = 0
+        var fileCount: Int32 = 0
+        var bundleCount: Int32 = 0
+        var bundleSize: UInt32 = 0
+        var uncompressedBundleSize: UInt32 = 0
+        var compressedFileSize: UInt32 = 0
+        var assetHeaderSize: UInt32 = 0
+        var numAssets: UInt32 = 0
+    }
+    
     private func loadRaw(buf: BinaryReader) {
-        // TODO: loading raw data
-        fatalError("Error: reading raw data is not yet implemented!")
+        self.rawDescriptor = RawDescriptor()
+        
+        rawDescriptor.fileSize = buf.readUInt()
+        rawDescriptor.headerSize = buf.readInt()
+        
+        rawDescriptor.fileCount = buf.readInt()
+        rawDescriptor.bundleCount = buf.readInt()
+        
+        if self.formatVersion >= 2 {
+            rawDescriptor.bundleSize = buf.readUInt()
+            
+            if self.formatVersion >= 3 {
+                rawDescriptor.uncompressedBundleSize = buf.readUInt()
+            }
+        }
+        
+        if rawDescriptor.headerSize >= 60 {
+            rawDescriptor.compressedFileSize = buf.readUInt()
+            rawDescriptor.assetHeaderSize = buf.readUInt()
+        }
+        
+        let _ = buf.readInt()
+        let _ = buf.readBytes(count: 1)
+        self.name = buf.readString()
+        
+        // preload assets
+        buf.seek(count: rawDescriptor.headerSize)
+
+        if !self.compressed {
+            rawDescriptor.numAssets = buf.readUInt()
+        } else {
+            rawDescriptor.numAssets = 1
+        }
+        
+        let asset = Asset(fromBundle: self, buf: buf)
+        assets.append(asset)
     }
     
     private func readCompressedData(buf: BinaryReader, compression: CompressionType, blockSize: UInt32) throws -> Data? {
-        let rawData = NSData(data: Data(bytes: BinaryReader.toByteArray(blockSize) + buf.readBytes(count: Int(ciblockSize) )))
+        let rawData = NSData(data: Data(bytes: BinaryReader.toByteArray(blockSize) + buf.readBytes(count: Int(self.unityfsDescriptor.ciblockSize) )))
         
         if compression == .none {
             return Data(referencing: rawData)
@@ -162,21 +214,21 @@ public class AssetBundle: CustomStringConvertible {
 
 class ArchiveBlockInfo {
     
-    let uncompressed_size: Int32
-    let compressed_size: Int32
+    let uncompressedSize: Int32
+    let compressedSize: Int32
     let flags: Int16
     
     init(uncompressedSize: Int32, compressedSize: Int32, flags: Int16) {
-        self.uncompressed_size = uncompressedSize
-        self.compressed_size = compressedSize
+        self.uncompressedSize = uncompressedSize
+        self.compressedSize = compressedSize
         self.flags = flags
     }
     
     var compressed: Bool {
-        return self.compression_type != CompressionType.NONE
+        return self.compressionType != CompressionType.NONE
     }
     
-    var compression_type: CompressionType {
+    var compressionType: CompressionType {
         if let ct = CompressionType(rawValue: UInt32(self.flags & 0x3f)) {
             return ct
         }
@@ -189,7 +241,7 @@ class ArchiveBlockInfo {
             return Data(bytes: buf)
         }
         
-        let cType = self.compression_type
+        let cType = self.compressionType
         if cType == CompressionType.LZMA {
             // TODO: LZMA decompression
             /*props, dict_size = struct.unpack("<BI", buf.read(5))
@@ -212,7 +264,7 @@ class ArchiveBlockInfo {
         }
         
         if cType == .LZ4 || cType == .LZ4HC {
-            let rawData = NSData(data: Data(bytes: BinaryReader.toByteArray(self.uncompressed_size) + buf[0..<Int(self.compressed_size)] ))
+            let rawData = NSData(data: Data(bytes: BinaryReader.toByteArray(self.uncompressedSize) + buf[0..<Int(self.compressedSize)] ))
             
             if let ucData = rawData.decompressLZ4() {
                 return ucData
@@ -240,13 +292,13 @@ public class ArchiveBlockStorage : Readable {
         self.blocks = blocks
         self.stream = stream
         
-        self.basepos = stream.tell()
+        self.basepos = stream.tell
         // sum up all block uncompressed sizes
-        self.maxpos = blocks.reduce(0) { $0 + Int($1.uncompressed_size) }
+        self.maxpos = blocks.reduce(0) { $0 + Int($1.uncompressedSize) }
         
         self.sought = false
         
-        self._seek(new_cursor: 0)
+        self.seek(new_cursor: 0)
     }
     
     public var tell: Int {
@@ -263,13 +315,13 @@ public class ArchiveBlockStorage : Readable {
             new_cursor = count
         }
         if self.cursor != new_cursor {
-            self._seek(new_cursor: new_cursor)
+            self.seek(new_cursor: new_cursor)
         }
     }
     
-    private func _seek(new_cursor: Int) {
+    private func seek(new_cursor: Int) {
         self.cursor = new_cursor
-        if !self.in_current_block(pos: new_cursor) {
+        if !self.isInCurrentBlock(pos: new_cursor) {
             self.seek_to_block(pos: new_cursor)
         }
         
@@ -279,9 +331,9 @@ public class ArchiveBlockStorage : Readable {
         }
     }
     
-    func in_current_block(pos: Int) -> Bool {
+    func isInCurrentBlock(pos: Int) -> Bool {
         if let cb = self.current_block {
-            let end = self.current_block_start + cb.uncompressed_size
+            let end = self.current_block_start + Int(cb.uncompressedSize)
             return (self.current_block_start <= pos) && (pos < Int(end))
         }
         return false
@@ -291,18 +343,19 @@ public class ArchiveBlockStorage : Readable {
         var baseofs: Int32 = 0
         var ofs: Int32 = 0
         for b in self.blocks {
-            if Int(ofs + b.uncompressed_size) > pos {
+            if Int(ofs + b.uncompressedSize) > pos {
                 self.current_block = b
                 break
                 
             }
-            baseofs += b.compressed_size
-            ofs += b.uncompressed_size
+            baseofs += b.compressedSize
+            ofs += b.uncompressedSize
         }
-        
-        self.stream.seek(count: self.basepos + baseofs)
+		
+		self.current_block_start = Int(ofs)
+        self.stream.seek(count: Int32(self.basepos) + baseofs)
         if let cb = self.current_block {
-            let buf = self.stream.readBytes(count: Int(cb.compressed_size))
+            let buf = self.stream.readBytes(count: Int(cb.compressedSize))
             
             self.current_stream = BinaryReader(data: UPData(withData:cb.decompress(buf: buf)))
         }
@@ -312,7 +365,7 @@ public class ArchiveBlockStorage : Readable {
         var buf = [UInt8]()
         var size = count
         while size != 0 && self.cursor < self.maxpos {
-            if !self.in_current_block(pos: self.cursor) {
+            if !self.isInCurrentBlock(pos: self.cursor) {
                 self.seek_to_block(pos: self.cursor)
             }
             let part = self.current_stream!.readBytes(count: size)

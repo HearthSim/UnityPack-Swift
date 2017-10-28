@@ -69,7 +69,7 @@ public class ObjectInfo: CustomStringConvertible {
                             typename = typename[startIndex ... endIndex]
                         }
                     } else {
-                        fatalError("Object type \(script) is not ObjectPointer")
+                        fatalError("Object type \(String(describing: script)) is not ObjectPointer")
                     }
                 } else {
                     fatalError("Object type \(dict) is not dictionary type")
@@ -101,15 +101,23 @@ public class ObjectInfo: CustomStringConvertible {
         self.pathId = self.readId(buffer: buffer)
         self.dataOffset = buffer.readUInt() + self.asset.dataOffset
         self.size = buffer.readUInt()
-        self.typeId = Int(buffer.readInt())
-        self.classId = buffer.readInt16()
-        
+		
+		if self.asset.format < 17 {
+			self.typeId = Int(buffer.readInt())
+			self.classId = buffer.readInt16()
+		} else {
+			let typeId = buffer.readInt()
+			let classId = self.asset.tree.classIds[Int(typeId)]
+			self.typeId = Int(classId)
+			self.classId = Int16(classId)
+		}
+
         if self.asset.format <= 10 {
             self.isDestroyed = buffer.readInt16() != 0
-        } else if self.asset.format >= 11 {
+        } else if self.asset.format >= 11 && self.asset.format <= 16 {
             self.unk0 = buffer.readInt16()
             
-            if self.asset.format >= 15 {
+            if self.asset.format >= 15 && self.asset.format <= 16 {
                 self.unk1 = buffer.readUInt8()
             }
         }
@@ -126,6 +134,8 @@ public class ObjectInfo: CustomStringConvertible {
         if let buf = self.asset._buf {
             buf.seek(count: Int32(self.asset._buf_ofs + Int(self.dataOffset)) )
             if let typeTree = self.typeTree {
+				/*let objectBuf = buf.readBytes(count: Int(self.size))
+				return self.readValue(type: typeTree, buffer: BinaryReader(data: UPData(withData:Data(bytes: objectBuf))))*/
                 return self.readValue(type: typeTree, buffer: buf)
             }
         }
@@ -134,6 +144,8 @@ public class ObjectInfo: CustomStringConvertible {
     
     func readValue(type: TypeTree, buffer: BinaryReader) -> Any? {
         var align = false
+		let expectedSize = type.size
+		let posBefore = buffer.tell
         let t = type.type
         var firstChild = type.children.count > 0 ? type.children[0] : TypeTree(format: self.asset.format)
         
@@ -143,7 +155,9 @@ public class ObjectInfo: CustomStringConvertible {
             result = buffer.readBool()
         } else if t == "UInt8" {
             result =  buffer.readUInt8()
-        } else if t == "SInt16" {
+		} else if t == "SInt8" {
+			result =  buffer.readInt8()
+		} else if t == "SInt16" {
             result =  buffer.readInt16()
         } else if t == "UInt16" {
             result =  buffer.readInt16()
@@ -211,6 +225,14 @@ public class ObjectInfo: CustomStringConvertible {
             
     
         }
+		
+		// Check to make sure we read at least as many bytes the tree says.
+		// We allow reading more for the case of alignment.
+		let posAfter = buffer.tell
+		let actualSize = posAfter - posBefore
+		if expectedSize > 0 && actualSize < Int(expectedSize) {
+			fatalError("Expected read_value\(type) to read \(expectedSize) bytes, but only read \(actualSize) bytes")
+		}
         
         if align || type.postAlign {
             buffer.align()
